@@ -27,8 +27,8 @@
 
 ### Installation
 ```bash
-git clone [your-repository-url]
-cd rival_search_mcp
+git clone https://github.com/DamionR/RivalSearchMCP.git
+cd RivalSearchMCP
 pip install -r requirements.txt
 ```
 
@@ -51,7 +51,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "rival-search": {
       "command": "python",
-      "args": ["/path/to/rival_search_mcp/src/server.py"]
+      "args": ["/path/to/RivalSearchMCP/src/server.py"]
     }
   }
 }
@@ -194,7 +194,7 @@ rival_retrieve(
 {
   "command": "python",
   "args": ["src/server.py"],
-  "cwd": "/path/to/rival_search_mcp"
+  "cwd": "/path/to/RivalSearchMCP"
 }
 ```
 

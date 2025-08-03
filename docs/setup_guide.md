@@ -11,8 +11,8 @@
 ### Installation
 ```bash
 # 1. Clone repository
-git clone <repository-url>
-cd rival_search_mcp
+git clone https://github.com/DamionR/RivalSearchMCP.git
+cd RivalSearchMCP
 
 # 2. Create virtual environment
 python -m venv .venv
@@ -64,7 +64,7 @@ python src/server.py --help
   "mcpServers": {
     "rival-search": {
       "command": "python",
-      "args": ["/absolute/path/to/rival_search_mcp/src/server.py"],
+      "args": ["/absolute/path/to/RivalSearchMCP/src/server.py"],
       "env": {
         "DEBUG": "false"
       }
@@ -84,7 +84,7 @@ python src/server.py --help
 {
   "command": "python",
   "args": ["src/server.py"],
-  "cwd": "/absolute/path/to/rival_search_mcp"
+  "cwd": "/absolute/path/to/RivalSearchMCP"
 }
 ```
 
@@ -93,7 +93,7 @@ python src/server.py --help
 For any MCP-compatible client:
 ```bash
 # STDIO transport (most common)
-python /path/to/rival_search_mcp/src/server.py
+python /path/to/RivalSearchMCP/src/server.py
 
 # HTTP endpoint
 http://localhost:8000/mcp
