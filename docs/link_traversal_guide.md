@@ -2,7 +2,7 @@
 
 ## 🔗 Advanced Content Discovery with Link Traversal
 
-RivalSearchMCP now includes powerful link traversal functionality similar to Tavily API, allowing you to discover and extract comprehensive information by intelligently following links across websites.
+RivalSearchMCP includes powerful link traversal functionality, allowing you to discover and extract comprehensive information by intelligently following links across websites.
 
 ## 🚀 Quick Start
 
@@ -330,18 +330,18 @@ print(f"Found {result.data.unique_links_found} unique links")
 print(f"Max depth: {result.data.max_depth_reached}")
 ```
 
-## 🔍 Comparison with Tavily API
+## 🌟 Key Features
 
-| Feature | RivalSearchMCP | Tavily API |
-|---------|----------------|------------|
-| **Link Following** | ✅ Intelligent depth control | ✅ Smart traversal |
-| **Content Extraction** | ✅ Full content + OCR | ✅ Text extraction |
-| **Structured Output** | ✅ Pydantic models | ✅ JSON responses |
-| **Customization** | ✅ Extensive filtering options | ✅ Search parameters |
-| **Data Storage** | ✅ Built-in graph storage | ❌ No persistence |
-| **Specialized Tools** | ✅ Research/docs/mapping tools | ❌ General purpose |
-| **Cost** | ✅ Free/self-hosted | ❌ Pay per request |
-| **Privacy** | ✅ Fully local | ❌ External service |
+| Feature | RivalSearchMCP |
+|---------|----------------|
+| **Link Following** | ✅ Intelligent depth control with customizable limits |
+| **Content Extraction** | ✅ Full content extraction with OCR support |
+| **Structured Output** | ✅ Type-safe Pydantic models for all responses |
+| **Customization** | ✅ Extensive filtering and pattern matching options |
+| **Data Storage** | ✅ Built-in graph storage with persistent memory |
+| **Specialized Tools** | ✅ Research, documentation, and mapping tools |
+| **Cost** | ✅ Completely free and self-hosted |
+| **Privacy** | ✅ Fully local with no external data sharing |
 
 ## 🧪 Testing Link Traversal
 

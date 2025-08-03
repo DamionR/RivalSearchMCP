@@ -1,6 +1,6 @@
 """
 Link traversal functionality for deep content discovery.
-Similar to Tavily API's ability to follow links and extract comprehensive information.
+Intelligently follows links to extract comprehensive information across websites.
 """
 
 import asyncio
