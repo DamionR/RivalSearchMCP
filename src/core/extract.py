@@ -39,19 +39,21 @@ def extract_search_results(html: str, max_results: int = 10) -> List[Dict[str, s
             title = title_elem.text.strip()
             link = ''
             link_in_title = title_elem.find_parent('a')
-            if link_in_title:
-                link = link_in_title['href']
+            if link_in_title and hasattr(link_in_title, 'get'):  # type: ignore
+                link = link_in_title.get('href', '')  # type: ignore
             else:
                 parent = title_elem.parent
                 while parent and parent.name != 'a':
                     parent = parent.parent
-                if parent and parent.name == 'a':
-                    link = parent['href']
+                if parent and parent.name == 'a' and hasattr(parent, 'get'):  # type: ignore
+                    link = parent.get('href', '')  # type: ignore
                 else:
-                    container_link = container.find('a')
-                    if container_link:
-                        link = container_link['href']
-            if not link or not link.startswith('http') or link in seen_urls:
+                    container_link = container.find('a')  # type: ignore
+                    if container_link and hasattr(container_link, 'get'):  # type: ignore
+                        link = container_link.get('href', '')  # type: ignore
+                    else:
+                        link = ''
+            if not link or not isinstance(link, str) or not link.startswith('http') or link in seen_urls:
                 continue
             snippet = ''
             snippet_elem = container.select_one(selectors['snippet'])
@@ -64,7 +66,7 @@ def extract_search_results(html: str, max_results: int = 10) -> List[Dict[str, s
                         snippet = elem.text.strip()
                         break
                 if not snippet:
-                    text_divs = [div for div in container.find_all('div') if not div.find('h3') and len(div.text.strip()) > 20]
+                    text_divs = [div for div in container.find_all('div') if not div.find('h3') and len(div.text.strip()) > 20]  # type: ignore
                     if text_divs:
                         snippet = text_divs[0].text.strip()
             if title and link:
@@ -76,8 +78,8 @@ def extract_search_results(html: str, max_results: int = 10) -> List[Dict[str, s
         for a in anchors:
             if len(results) >= max_results:
                 break
-            link = a['href']
-            if not link.startswith('http') or 'google.com' in link or link in seen_urls:
+            link = a.get('href', '') if hasattr(a, 'get') else ''  # type: ignore
+            if not link or not isinstance(link, str) or not link.startswith('http') or 'google.com' in link or link in seen_urls:
                 continue
             title = a.text.strip()
             if not title:

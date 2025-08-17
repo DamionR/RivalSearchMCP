@@ -4,7 +4,7 @@ Provides data access endpoints for LLMs to understand server capabilities and st
 """
 
 import json
-from mcp.server.fastmcp import FastMCP
+from mcp.server import FastMCP
 from src.data_store.manager import store_manager
 from src.config import DEFAULT_UA_LIST, PAYWALL_INDICATORS, ARCHIVE_FALLBACKS
 

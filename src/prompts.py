@@ -3,7 +3,7 @@ MCP Prompts for RivalSearchMCP server.
 Provides reusable templates to guide LLM interactions with our tools.
 """
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import FastMCP
 
 
 def register_prompts(mcp: FastMCP):

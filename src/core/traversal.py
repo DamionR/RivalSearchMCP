@@ -8,7 +8,6 @@ import re
 from typing import List, Set, Dict, Any, Optional, Tuple
 from urllib.parse import urljoin, urlparse, urlunparse
 from bs4 import BeautifulSoup
-import httpx
 from dataclasses import dataclass
 
 from .fetch import base_fetch_url
@@ -45,12 +44,12 @@ class TraversalConfig:
 class LinkTraverser:
     """Advanced link traversal system for comprehensive content discovery."""
     
-    def __init__(self, config: TraversalConfig = None):
+    def __init__(self, config: Optional[TraversalConfig] = None):
         self.config = config or TraversalConfig()
         self.visited_urls: Set[str] = set()
         self.results: List[TraversalResult] = []
         
-    def normalize_url(self, url: str, base_url: str = None) -> str:
+    def normalize_url(self, url: str, base_url: Optional[str] = None) -> str:
         """Normalize URL for consistent comparison."""
         if base_url:
             url = urljoin(base_url, url)
@@ -75,8 +74,8 @@ class LinkTraverser:
             links = []
             
             # Extract all href attributes from anchor tags
-            for link in soup.find_all('a', href=True):
-                href = link['href'].strip()
+            for link in soup.find_all('a', href=True):  # type: ignore
+                href = link.get('href', '').strip()  # type: ignore
                 
                 # Skip empty, javascript, or anchor links
                 if not href or href.startswith(('#', 'javascript:', 'mailto:', 'tel:')):
@@ -87,7 +86,7 @@ class LinkTraverser:
                 
                 # Basic URL validation
                 parsed = urlparse(full_url)
-                if not parsed.scheme in ('http', 'https'):
+                if parsed.scheme not in ('http', 'https'):
                     continue
                 
                 links.append(full_url)
@@ -158,7 +157,7 @@ class LinkTraverser:
                 return h1_tag.get_text().strip()
             
             return "Untitled"
-        except:
+        except Exception:
             return "Untitled"
     
     async def fetch_page(self, url: str, depth: int) -> TraversalResult:

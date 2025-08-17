@@ -33,7 +33,7 @@ setup(
     },
     author='Damion Rashford',
     description='Advanced MCP server for web retrieval, storage, and reasoning',
-    long_description=open('README.md').read(),
+    long_description=open('../README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/damionr/rival-search-mcp',
     license='MIT',

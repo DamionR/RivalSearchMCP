@@ -29,6 +29,10 @@ data_store.json
 data/
 logs/
 
+# MCP specific
+mcp_server.log
+mcp_*.log
+
 # IDE and editor files
 .DS_Store
 .idea/
@@ -59,6 +63,8 @@ Thumbs.db
 htmlcov/
 .tox/
 .nox/
+tests/comprehensive_test_report_*.json
+tests/*_test_report_*.json
 
 # Temporary files
 *.tmp
@@ -73,6 +79,9 @@ htmlcov/
 credentials.json
 secrets.json
 config.local.json
+.env.local
+.env.production
+.env.staging
 
 # Node modules (if any)
 node_modules/
@@ -91,6 +100,9 @@ Pipfile.lock
 
 # PEP 582
 __pypackages__/
+
+# Ruff cache
+.ruff_cache/
 
 # Distribution / packaging
 .Python

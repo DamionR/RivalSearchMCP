@@ -2,13 +2,12 @@
 Data storage and management tools for FastMCP server.
 """
 
-import json
 from typing import List, Dict, Union
-from mcp.server.fastmcp import FastMCP
+from mcp.server import FastMCP
 
 from src.data_store.manager import store_manager
 from src.core.extract import extract_triples
-from src.types.schemas import DataStoreResult
+from src.schemas.schemas import DataStoreResult
 
 
 def register_data_tools(mcp: FastMCP):
@@ -21,10 +20,18 @@ def register_data_tools(mcp: FastMCP):
             # Convert to expected format and add nodes
             formatted_nodes = []
             for node in nodes:
+                # Handle facts parameter - convert string to list if needed
+                facts = node.get("facts", [])
+                if isinstance(facts, str):
+                    # Split by comma if it's a string
+                    facts = [fact.strip() for fact in facts.split(',') if fact.strip()]
+                elif not isinstance(facts, list):
+                    facts = []
+                
                 formatted_node = {
                     "name": node.get("name", ""),
                     "type": node.get("type", "unknown"),
-                    "facts": node.get("facts", [])
+                    "facts": facts
                 }
                 formatted_nodes.append(formatted_node)
             
@@ -48,13 +55,13 @@ def register_data_tools(mcp: FastMCP):
     def search_nodes(query: str, limit: int = 10) -> DataStoreResult:
         """Search nodes in the knowledge graph by content."""
         try:
-            results = store_manager.search_nodes(query, limit)
+            results = store_manager.search_nodes(query)
             
             return DataStoreResult(
                 success=True,
                 operation="search_nodes",
-                affected_count=len(results),
-                data={"results": results, "query": query}
+                affected_count=len(results) if results is not None else 0,
+                data={"results": results if results is not None else [], "query": query}
             )
         except Exception as e:
             return DataStoreResult(
@@ -93,7 +100,7 @@ def register_data_tools(mcp: FastMCP):
             return DataStoreResult(
                 success=True,
                 operation="remove_nodes",
-                affected_count=count,
+                affected_count=count if count is not None else 0,
                 data={"removed_nodes": node_names}
             )
         except Exception as e:
@@ -111,10 +118,15 @@ def register_data_tools(mcp: FastMCP):
             # Convert to expected format
             formatted_links = []
             for link in links:
+                # Handle both 'source' and 'from' parameter names
+                source = link.get("source") or link.get("from", "")
+                target = link.get("target") or link.get("to", "")
+                relationship = link.get("relationship", "related_to")
+                
                 formatted_link = {
-                    "source": link.get("source", ""),
-                    "target": link.get("target", ""),
-                    "relationship": link.get("relationship", "related_to")
+                    "from": source,
+                    "to": target,
+                    "relationship": relationship
                 }
                 formatted_links.append(formatted_link)
             
@@ -140,10 +152,15 @@ def register_data_tools(mcp: FastMCP):
         try:
             formatted_links = []
             for link in links:
+                # Handle both 'source' and 'from' parameter names
+                source = link.get("source") or link.get("from", "")
+                target = link.get("target") or link.get("to", "")
+                relationship = link.get("relationship", "related_to")
+                
                 formatted_link = {
-                    "source": link.get("source", ""),
-                    "target": link.get("target", ""),
-                    "relationship": link.get("relationship", "related_to")
+                    "from": source,
+                    "to": target,
+                    "relationship": relationship
                 }
                 formatted_links.append(formatted_link)
             
@@ -152,7 +169,7 @@ def register_data_tools(mcp: FastMCP):
             return DataStoreResult(
                 success=True,
                 operation="remove_links",
-                affected_count=count,
+                affected_count=count if count is not None else 0,
                 data={"removed_links": formatted_links}
             )
         except Exception as e:
@@ -167,7 +184,9 @@ def register_data_tools(mcp: FastMCP):
     def add_facts(node_name: str, facts: List[str]) -> DataStoreResult:
         """Add facts to an existing node in the knowledge graph."""
         try:
-            store_manager.add_facts(node_name, facts)
+            # Convert to expected format for DataStoreManager.add_facts
+            facts_data = [{"node_name": node_name, "facts": facts}]
+            store_manager.add_facts(facts_data)
             
             return DataStoreResult(
                 success=True,
@@ -221,7 +240,9 @@ def register_data_tools(mcp: FastMCP):
     def get_node_connections(node_name: str) -> DataStoreResult:
         """Get all connections and relationships for a specific node."""
         try:
-            connections = store_manager.get_node_connections(node_name)
+            # Use get_specific_nodes to get the node and its connections
+            node_data = store_manager.get_specific_nodes([node_name])
+            connections = node_data.get('links', [])
             
             return DataStoreResult(
                 success=True,
@@ -241,13 +262,19 @@ def register_data_tools(mcp: FastMCP):
     def clear_store() -> DataStoreResult:
         """Clear all data from the knowledge graph."""
         try:
-            count = store_manager.clear_store()
+            # Get current count before clearing
+            current_data = store_manager.get_full_store()
+            total_items = len(current_data.get('nodes', [])) + len(current_data.get('links', []))
+            
+            # Clear by removing all nodes (links will be removed automatically)
+            all_node_names = [node['name'] for node in current_data.get('nodes', [])]
+            store_manager.remove_nodes(all_node_names)
             
             return DataStoreResult(
                 success=True,
                 operation="clear_store",
-                affected_count=count,
-                data={"message": f"Cleared {count} items from store"}
+                affected_count=total_items,
+                data={"message": f"Cleared {total_items} items from store"}
             )
         except Exception as e:
             return DataStoreResult(

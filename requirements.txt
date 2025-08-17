@@ -18,3 +18,8 @@ pytest-asyncio
 pytest-mock
 ruff
 setuptools
+mcp
+bot-safe-agents
+nagooglesearch
+bs4
+playwright

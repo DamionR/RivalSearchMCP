@@ -158,3 +158,23 @@ class SuccessResponse(BaseModel):
     """Generic success response."""
     success: bool = Field(default=True, description="Operation success")
     message: str = Field(description="Success message")
+
+
+# ===== WEB TOOLS SCHEMAS =====
+
+class GoogleSearchResult(BaseModel):
+    """Result from Google search operation."""
+    success: bool = Field(description="Whether search was successful")
+    results: List[SearchResult] = Field(description="List of search results")
+    query: str = Field(description="Search query used")
+    count: int = Field(description="Number of results returned")
+    error: Optional[str] = Field(default=None, description="Error message if failed")
+
+
+class WebsiteTraversalResult(BaseModel):
+    """Result from website traversal operation."""
+    success: bool = Field(description="Whether traversal was successful")
+    pages: List[TraversalPage] = Field(description="List of traversed pages")
+    summary: str = Field(description="Human-readable summary")
+    total_pages: int = Field(description="Total number of pages")
+    source: str = Field(description="Source URL")

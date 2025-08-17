@@ -13,15 +13,20 @@ class ReasoningProcessor:
         for key in required:
             if key not in input_data:
                 raise ValueError(f"Missing {key}")
+        
+        # Fix the int conversion issue by handling None values properly
+        revises_step = input_data.get('revises_step')
+        branch_from_step = input_data.get('branch_from_step')
+        
         step = {
             'step_content': str(input_data['step_content']),
             'step_num': int(input_data['step_num']),
             'estimated_steps': int(input_data['estimated_steps']),
             'continue_reasoning': bool(input_data['continue_reasoning']),
             'is_revision': bool(input_data.get('is_revision', False)),
-            'revises_step': int(input_data['revises_step']) if 'revises_step' in input_data else None,
-            'branch_from_step': int(input_data['branch_from_step']) if 'branch_from_step' in input_data else None,
-            'branch_id': str(input_data['branch_id']) if 'branch_id' in input_data else None,
+            'revises_step': int(revises_step) if revises_step is not None else None,
+            'branch_from_step': int(branch_from_step) if branch_from_step is not None else None,
+            'branch_id': str(input_data['branch_id']) if input_data.get('branch_id') is not None else None,
             'needs_more_steps': bool(input_data.get('needs_more_steps', False)),
         }
         self.steps.append(step)

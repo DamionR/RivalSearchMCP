@@ -4,9 +4,9 @@ Reasoning and AI processing tools for FastMCP server.
 
 import json
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from mcp.server import FastMCP
 from src.reasoning.processor import ReasoningProcessor
-from src.types.schemas import ReasoningResult, ReasoningStep
+from src.schemas.schemas import ReasoningResult, ReasoningStep
 
 
 def register_reasoning_tools(mcp: FastMCP):

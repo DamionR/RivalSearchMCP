@@ -2,33 +2,35 @@
 
 **Advanced MCP server** for web retrieval, intelligent content discovery, and data management. Bypass restrictions, access any content, and build knowledge graphs with AI-powered reasoning.
 
-## 🚀 What You Can Do
+## What You Can Do
 
-### 🌐 **Smart Web Access**
+### Smart Web Access
 - **Bypass Any Restrictions**: Get past paywalls, bot blocks, and rate limits
-- **Google Search Integration**: Use `search:your query` to find anything
+- **Multi-Engine Search**: Use DuckDuckGo, Startpage, Brave Search, and Searx
 - **Intelligent Link Following**: Automatically discover related content across websites
 - **Multi-Format Support**: Handle text, images (with OCR), streaming data, and more
 - **Archive Fallbacks**: Access blocked content through archive services
 
-### 🧠 **AI-Powered Research**
+### AI-Powered Research
 - **Deep Website Exploration**: Follow links intelligently to gather comprehensive information
 - **Documentation Navigation**: Specialized tools for exploring technical docs and APIs
 - **Competitive Analysis**: Map website structures and discover key content
 - **Adaptive Reasoning**: Multi-step problem solving with branching logic
 
-### 💾 **Knowledge Management**
+### Knowledge Management
 - **Graph Database**: Store facts, relationships, and insights
 - **Smart Search**: Find stored information quickly
 - **Persistent Memory**: Keep your research across sessions
 - **Structured Data**: Extract and organize information automatically
 
-## 📦 Quick Setup
+## Quick Setup
 
 ### Installation
 ```bash
 git clone https://github.com/DamionR/RivalSearchMCP.git
 cd RivalSearchMCP
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -57,15 +59,20 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-## 🛠️ Available Tools
+## Available Tools
 
-### 🌐 **Web Research Tools**
+### Web Research Tools
 
-**`rival_retrieve`** - Your main web access tool
+**`rival_retrieve`** - Enhanced web content retrieval
 - Get any webpage content, bypass restrictions
-- Use `search:your topic` for Google searches
+- Use `search:your topic` for multi-engine searches
 - Enable `traverse_links=True` for multi-page discovery
 - Perfect for: Single pages, search results, comprehensive research
+
+**`google_search`** - Multi-engine search
+- Uses DuckDuckGo, Startpage, Brave Search, and Searx
+- Privacy-focused search with fallback engines
+- Use for: Finding information across multiple search engines
 
 **`research_website`** - Deep topic exploration
 - Intelligently follow related links
@@ -90,14 +97,18 @@ Add to your `claude_desktop_config.json`:
 - Pull images from web pages with OCR text extraction
 - Use for: Visual research, document analysis
 
-### 🧠 **AI Processing Tools**
+**`batch_retrieve`** - Parallel content retrieval
+- Retrieve content from multiple resources simultaneously
+- Use for: Bulk data collection, comparative analysis
+
+### AI Processing Tools
 
 **`adaptive_reason`** - Smart problem solving
 - Step-by-step reasoning with branching paths
 - Revise and extend your thinking process
 - Use for: Complex analysis, decision making, research synthesis
 
-### 💾 **Data Management Tools**
+### Data Management Tools
 
 **`add_nodes`** - Store your discoveries
 - Save facts, relationships, and insights
@@ -114,14 +125,25 @@ Add to your `claude_desktop_config.json`:
 - Export your research data
 - Use for: Understanding your knowledge base, data export
 
-*Plus 6 additional data management tools for links, facts, and advanced operations*
+**`add_links`** - Create relationships
+- Connect nodes in your knowledge graph
+- Build semantic relationships between concepts
+- Use for: Organizing research, creating connections
 
-## 🔍 **Common Workflows**
+**`remove_nodes`** - Clean up data
+- Remove unwanted nodes from your knowledge graph
+- Use for: Data cleanup, removing outdated information
+
+**`clear_store`** - Reset knowledge graph
+- Clear all stored data
+- Use for: Starting fresh, clearing test data
+
+## Common Workflows
 
 ### Research a Topic Thoroughly
 ```python
 # 1. Start with a search to find sources
-rival_retrieve(resource="search:artificial intelligence trends 2024", limit=10)
+rival_retrieve(resource="search:artificial intelligence trends 2025", limit=10)
 
 # 2. Deep dive into promising sources
 research_website(url="https://promising-source.com", max_pages=8, store_data=True)
@@ -157,28 +179,7 @@ research_website(url="https://competitor.com/products", max_pages=10, store_data
 search_nodes(query="competitor features pricing")
 ```
 
-### Discover Content with Link Traversal
-```python
-# Single page with intelligent link following
-rival_retrieve(
-    resource="https://research-article.com",
-    traverse_links=True,
-    max_depth=2,
-    max_pages=5,
-    same_domain_only=True
-)
-
-# Cross-domain research (be careful with max_pages)
-rival_retrieve(
-    resource="https://starting-point.com",
-    traverse_links=True,
-    max_depth=1,
-    max_pages=8,
-    same_domain_only=False
-)
-```
-
-## 🔧 **Configuration Options**
+## Configuration Options
 
 ### Transport Methods
 | Transport | Best For | Command |
@@ -213,20 +214,20 @@ response = requests.post("http://localhost:8000/mcp", json={
 })
 ```
 
-## 🧪 Testing & Development
+## Testing & Development
 
 ```bash
-# Run all tests
-python -m pytest tests/ -v
+# Run comprehensive test suite
+python tests/test_suite.py
 
 # Test with MCP Inspector (interactive testing)
 npx @modelcontextprotocol/inspector python src/server.py
 
-# Test specific functionality
-python -m pytest tests/test_fetch.py -v
+# Run specific tests
+python -m pytest tests/ -v
 ```
 
-## ⚙️ **Advanced Features**
+## Advanced Features
 
 ### Link Traversal Configuration
 - **`max_depth`**: How many link levels to follow (1-3 recommended)
@@ -245,7 +246,7 @@ python -m pytest tests/test_fetch.py -v
 - **Relationship Mapping**: Understands connections between concepts
 - **Persistent Storage**: Keeps your research between sessions
 
-## 🆘 **Support & Help**
+## Support & Help
 
 ### Common Issues
 - **Network Errors**: Check internet connection and proxy settings
@@ -257,34 +258,45 @@ python -m pytest tests/test_fetch.py -v
 - **Check Logs**: Server provides detailed logging for troubleshooting
 - **Validate Setup**: Ensure all dependencies are installed correctly
 
-## 📄 **Requirements**
+## Requirements
 
-- **Python**: 3.8 or higher
+- **Python**: 3.10 or higher
 - **Internet Access**: Required for web retrieval
 - **Optional**: Tesseract for enhanced OCR functionality
 
-## 🤝 **Contributing**
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature-name`
 3. Add tests for new functionality
-4. Ensure tests pass: `python -m pytest tests/ -v`
+4. Ensure tests pass: `python tests/test_suite.py`
 5. Submit a pull request
 
-## 📋 **Architecture**
+## Architecture
 
 The server uses a **modular FastMCP architecture**:
 
 ```
 src/
 ├── server.py              # Main server entry point
+├── mcp_server.py          # Custom MCP server implementation
 ├── tools/
 │   ├── web_tools.py       # Web retrieval and research tools
 │   ├── reasoning_tools.py # AI processing and reasoning
 │   └── data_tools.py      # Data storage and management
+├── core/
+│   ├── fetch.py           # Core fetching logic
+│   ├── search_engines.py  # Multi-engine search implementation
+│   ├── bypass.py          # Bypass techniques
+│   └── traversal.py       # Link traversal logic
+├── data_store/
+│   └── manager.py         # Knowledge graph management
+├── reasoning/
+│   └── processor.py       # AI reasoning engine
 ├── prompts.py            # Reusable prompt templates
 ├── resources.py          # Server information and help
-└── core/                 # Core functionality modules
+└── schemas/
+    └── schemas.py        # Data models and schemas
 ```
 
 This design makes it easy to:
@@ -295,4 +307,4 @@ This design makes it easy to:
 
 ---
 
-**Ready to start exploring the web intelligently?** Install the server, connect it to your AI assistant, and begin discovering content like never before! 🚀
+**Ready to start exploring the web intelligently?** Install the server, connect it to your AI assistant, and begin discovering content like never before!
