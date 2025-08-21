@@ -1,3 +1,4 @@
+[![Verified on MSeeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/5fefd41f-2c41-48d8-8b80-e69255aa6331)
 # RivalSearchMCP
 
 Advanced MCP server for web retrieval, search, and content discovery.
