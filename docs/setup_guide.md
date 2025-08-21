@@ -2,6 +2,18 @@
 
 ## 🚀 Quick Start
 
+### 🌐 **Use the Live Server (Recommended)**
+
+The easiest way to use RivalSearchMCP is to connect to the live deployment:
+
+**URL:** `https://RivalSearchMCP.fastmcp.app/mcp`
+
+Simply add this URL to any MCP-compatible client (Claude Desktop, Cursor IDE, VS Code, etc.) and start using advanced web research capabilities immediately.
+
+### 🛠️ **Local Installation (Development)**
+
+If you want to run the server locally for development or customization:
+
 ### Prerequisites
 - **Python**: 3.8+ (recommended 3.12 for optimal performance)
 - **Virtual Environment**: venv, conda, or poetry
@@ -11,7 +23,7 @@
 ### Installation
 ```bash
 # 1. Clone repository
-git clone https://github.com/DamionR/RivalSearchMCP.git
+git clone https://github.com/damionrashford/RivalSearchMCP.git
 cd RivalSearchMCP
 
 # 2. Create virtual environment
@@ -30,16 +42,16 @@ python -m pytest tests/ -v
 ### Basic Server Startup
 ```bash
 # For Claude Desktop (default)
-python src/server.py
+python server.py
 
 # With HTTP transport for web apps
-python src/server.py --transport http --port 8000
+python server.py --transport http --port 8000
 
 # With SSE transport for real-time apps
-python src/server.py --transport sse --port 8001
+python server.py --transport sse --port 8001
 
 # View all options
-python src/server.py --help
+python server.py --help
 ```
 
 ### Server Options
@@ -64,7 +76,7 @@ python src/server.py --help
   "mcpServers": {
     "rival-search": {
       "command": "python",
-      "args": ["/absolute/path/to/RivalSearchMCP/src/server.py"],
+      "args": ["/absolute/path/to/RivalSearchMCP/server.py"],
       "env": {
         "DEBUG": "false"
       }
@@ -83,7 +95,7 @@ python src/server.py --help
 ```json
 {
   "command": "python",
-  "args": ["src/server.py"],
+  "args": ["server.py"],
   "cwd": "/absolute/path/to/RivalSearchMCP"
 }
 ```
@@ -93,7 +105,7 @@ python src/server.py --help
 For any MCP-compatible client:
 ```bash
 # STDIO transport (most common)
-python /path/to/RivalSearchMCP/src/server.py
+python /path/to/RivalSearchMCP/server.py
 
 # HTTP endpoint
 http://localhost:8000/mcp
@@ -118,18 +130,18 @@ python -m pytest tests/test_manager.py -v # Data storage
 ### Interactive Testing
 ```bash
 # Launch MCP Inspector for interactive testing
-npx @modelcontextprotocol/inspector python src/server.py
+npx @modelcontextprotocol/inspector python server.py
 
 # Test basic functionality in inspector:
-# 1. Try rival_retrieve with a simple URL
-# 2. Test search functionality with "search:test query"
+# 1. Try retrieve_content with a simple URL
+# 2. Test search functionality with google_search
 # 3. Test data storage with add_nodes
 ```
 
 ### Manual Server Test
 ```bash
 # Start server manually
-python src/server.py
+python server.py
 
 # Should see output like:
 # "RivalSearchMCP server started..."
@@ -156,7 +168,7 @@ TESSERACT_PATH=/usr/bin/tesseract
 The modular architecture allows easy customization:
 
 ```python
-# src/server.py - Main server entry point
+# server.py - Main server entry point
 # src/tools/ - Tool categories (web, reasoning, data)
 # src/prompts.py - Reusable prompt templates
 # src/resources.py - Server information and help
@@ -219,7 +231,7 @@ echo $HTTPS_PROXY
 
 1. **Server starts without errors**
    ```bash
-   python src/server.py --help
+   python server.py --help
    ```
 
 2. **Tests pass successfully**
@@ -229,11 +241,11 @@ echo $HTTPS_PROXY
 
 3. **MCP Inspector connects**
    ```bash
-   npx @modelcontextprotocol/inspector python src/server.py
+   npx @modelcontextprotocol/inspector python server.py
    ```
 
 4. **Basic tool works**
-   - Test `rival_retrieve` with a simple URL
+   - Test `retrieve_content` with a simple URL
    - Verify response contains expected content
 
 ### Getting Additional Help

@@ -18,7 +18,7 @@ MCP Inspector is the official debugging and testing tool for Model Context Proto
 ### Basic Inspector Launch
 ```bash
 # Start with your FastMCP server (recommended)
-npx @modelcontextprotocol/inspector python src/server.py
+npx @modelcontextprotocol/inspector python server.py
 ```
 
 This command will:
@@ -42,13 +42,13 @@ Starting MCP inspector...
 ### 1. STDIO Transport (Default)
 ```bash
 # Most reliable for local development
-npx @modelcontextprotocol/inspector python src/server.py
+npx @modelcontextprotocol/inspector python server.py
 
 # With environment variables
-npx @modelcontextprotocol/inspector -e DEBUG=true python src/server.py
+npx @modelcontextprotocol/inspector -e DEBUG=true python server.py
 
 # With custom arguments
-npx @modelcontextprotocol/inspector python src/server.py --custom-arg value
+npx @modelcontextprotocol/inspector python server.py --custom-arg value
 ```
 
 **Best for**: Local development, Claude Desktop integration testing
@@ -56,7 +56,7 @@ npx @modelcontextprotocol/inspector python src/server.py --custom-arg value
 ### 2. HTTP Transport Testing
 ```bash
 # Terminal 1: Start HTTP server
-python src/server.py --transport http --port 8000
+python server.py --transport http --port 8000
 
 # Terminal 2: Open Inspector with HTTP configuration
 # Navigate to: http://localhost:6274/?transport=streamable-http&serverUrl=http://localhost:8000
@@ -67,7 +67,7 @@ python src/server.py --transport http --port 8000
 ### 3. SSE Transport Testing
 ```bash
 # Terminal 1: Start SSE server
-python src/server.py --transport sse --port 8001
+python server.py --transport sse --port 8001
 
 # Terminal 2: Configure Inspector for SSE
 # Navigate to: http://localhost:6274/?transport=sse&serverUrl=http://localhost:8001/sse
@@ -87,16 +87,16 @@ python src/server.py --transport sse --port 8001
 
 #### Web Retrieval Tools
 ```bash
-# Test rival_retrieve with URL
+# Test retrieve_content with URL
 resource: "https://httpbin.org/json"
 max_length: 1000
 raw: false
 
-# Test rival_retrieve with search
+# Test retrieve_content with search
 resource: "search:FastMCP Python"
 limit: 5
 
-# Test stream_retrieve
+# Test stream_content
 url: "wss://echo.websocket.org"
 ```
 
