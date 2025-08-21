@@ -12,6 +12,6 @@ ARCHIVE_FALLBACKS = ["https://archive.is/?url=", "https://12ft.io/proxy?q=", "ht
 
 def get_config():
     return {
-        'data_path': os.environ.get('DATA_PATH', 'data_store.json'),
+    
         'suppress_logs': os.environ.get('SUPPRESS_LOGS', 'false').lower() == 'true',
     }

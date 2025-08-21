@@ -1,27 +1,23 @@
 # RivalSearchMCP
 
-**Advanced MCP server** for web retrieval, intelligent content discovery, and data management. Bypass restrictions, access any content, and build knowledge graphs with AI-powered reasoning.
+**Advanced MCP server** for web retrieval, search, and content discovery. Bypass restrictions, access any content, and gather comprehensive information from the web.
 
 ## What You Can Do
 
 ### Smart Web Access
 - **Bypass Any Restrictions**: Get past paywalls, bot blocks, and rate limits
-- **Multi-Engine Search**: Use DuckDuckGo, Startpage, Brave Search, and Searx
+- **Google Search Scraping**: Direct Google Search with advanced features and metadata extraction
 - **Intelligent Link Following**: Automatically discover related content across websites
 - **Multi-Format Support**: Handle text, images (with OCR), streaming data, and more
 - **Archive Fallbacks**: Access blocked content through archive services
+- **Clean Content Processing**: Automatic HTML cleaning and markdown formatting
+- **Single-Line Optimization**: Efficient token usage with delimited content
 
-### AI-Powered Research
+### Advanced Web Research
 - **Deep Website Exploration**: Follow links intelligently to gather comprehensive information
 - **Documentation Navigation**: Specialized tools for exploring technical docs and APIs
 - **Competitive Analysis**: Map website structures and discover key content
-- **Adaptive Reasoning**: Multi-step problem solving with branching logic
-
-### Knowledge Management
-- **Graph Database**: Store facts, relationships, and insights
-- **Smart Search**: Find stored information quickly
-- **Persistent Memory**: Keep your research across sessions
-- **Structured Data**: Extract and organize information automatically
+- **Batch Processing**: Retrieve content from multiple sources simultaneously
 
 ## Quick Setup
 
@@ -29,177 +25,242 @@
 ```bash
 git clone https://github.com/DamionR/RivalSearchMCP.git
 cd RivalSearchMCP
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m venv .venv-py313
+source .venv-py313/bin/activate  # On Windows: .venv-py313\Scripts\activate
+pip install fastmcp httpx cloudscraper beautifulsoup4 lxml pillow websockets pytesseract fake-useragent selenium
 ```
 
 ### Basic Usage
 ```bash
-# Start for Claude Desktop (default)
-python src/server.py
-
-# Start with web interface
-python src/server.py --transport http --port 8000
-
-# Start for real-time applications
-python src/server.py --transport sse --port 8001
+# Start the MCP server
+python -m src.server
 ```
 
-### Connect to Claude Desktop
-Add to your `claude_desktop_config.json`:
+## Installation for Different MCP Clients
+
+### 🚀 **FastMCP CLI (Recommended - Easiest)**
+
+The easiest way to install RivalSearchMCP in any client is using FastMCP's first-class integrations:
+
+#### **For Cursor IDE:**
+```bash
+# Navigate to your RivalSearchMCP directory
+cd /path/to/RivalSearchMCP
+
+# Install with FastMCP CLI (automatically handles dependencies)
+fastmcp install cursor src/server.py
+
+# Or install to workspace only
+fastmcp install cursor src/server.py --workspace .
+```
+
+#### **For Claude Desktop:**
+```bash
+# Navigate to your RivalSearchMCP directory
+cd /path/to/RivalSearchMCP
+
+# Install with FastMCP CLI
+fastmcp install claude-desktop src/server.py
+
+# Restart Claude Desktop after installation
+```
+
+#### **For Claude Code:**
+```bash
+# Navigate to your RivalSearchMCP directory
+cd /path/to/RivalSearchMCP
+
+# Install with FastMCP CLI
+fastmcp install claude-code src/server.py
+```
+
+#### **For Any MCP Client (Generate JSON Config):**
+```bash
+# Generate standard MCP JSON configuration
+fastmcp install mcp-json src/server.py --name "RivalSearchMCP"
+
+# Copy to clipboard for easy pasting
+fastmcp install mcp-json src/server.py --name "RivalSearchMCP" --copy
+```
+
+### 🔧 **Manual Configuration (Advanced Users)**
+
+#### **For Cursor IDE:**
+Add to your `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "rival-search": {
-      "command": "python",
-      "args": ["/path/to/RivalSearchMCP/src/server.py"]
+    "rival-search-mcp": {
+      "command": "/path/to/RivalSearchMCP/.venv-py313/bin/python",
+      "args": ["src/server.py"]
     }
   }
 }
 ```
 
-## Available Tools
+#### **For Claude Desktop:**
+Add to your `~/.claude/claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "rival-search-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "--with", "httpx",
+        "--with", "cloudscraper",
+        "--with", "beautifulsoup4",
+        "--with", "lxml",
+        "--with", "pillow",
+        "--with", "websockets",
+        "--with", "pytesseract",
+        "--with", "fake-useragent",
+        "--with", "selenium",
+        "fastmcp",
+        "run",
+        "/path/to/RivalSearchMCP/src/server.py"
+      ]
+    }
+  }
+}
+```
 
-### Web Research Tools
+#### **For VS Code:**
+Add to your workspace `.vscode/mcp.json`:
+```json
+{
+  "mcpServers": {
+    "rival-search-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "--with", "httpx",
+        "--with", "cloudscraper",
+        "--with", "beautifulsoup4",
+        "--with", "lxml",
+        "--with", "pillow",
+        "--with", "websockets",
+        "--with", "pytesseract",
+        "--with", "fake-useragent",
+        "--with", "selenium",
+        "fastmcp",
+        "run",
+        "/path/to/RivalSearchMCP/src/server.py"
+      ]
+    }
+  }
+}
+```
 
-**`rival_retrieve`** - Enhanced web content retrieval
+### 📋 **Requirements**
+
+- **uv**: Must be installed for FastMCP CLI installations
+  ```bash
+  # macOS
+  brew install uv
+  
+  # Linux/Windows
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+
+- **Python 3.11+**: Required for all installations
+- **Dependencies**: Automatically handled by FastMCP CLI or manually installed
+
+### 🔄 **Environment Variables (Optional)**
+
+If you need to set environment variables:
+
+```bash
+# With FastMCP CLI
+fastmcp install cursor src/server.py --env DEBUG=true --env API_KEY=your-key
+
+# Or load from .env file
+fastmcp install cursor src/server.py --env-file .env
+```
+
+### 🎯 **Verification**
+
+After installation, you should see:
+- **Cursor**: MCP tools available in AI assistant
+- **Claude Desktop**: Hammer icon (🔨) in bottom left of input box
+- **Claude Code**: Tools available in Claude's interface
+- **VS Code**: MCP tools accessible in workspace
+
+## Available Tools (6 Total)
+
+### Content Retrieval Tools (2)
+
+**`retrieve_content`** - Comprehensive content retrieval
 - Get any webpage content, bypass restrictions
-- Use `search:your topic` for multi-engine searches
-- Enable `traverse_links=True` for multi-page discovery
-- Perfect for: Single pages, search results, comprehensive research
+- Support for single URLs, multiple URLs, or search queries
+- Built-in image extraction with OCR
+- Clean HTML-free content with markdown formatting
+- Perfect for: Single pages, batch retrieval, search results, comprehensive research
 
-**`google_search`** - Multi-engine search
-- Uses DuckDuckGo, Startpage, Brave Search, and Searx
-- Privacy-focused search with fallback engines
-- Use for: Finding information across multiple search engines
-
-**`research_website`** - Deep topic exploration
-- Intelligently follow related links
-- Optimized for thorough content discovery
-- Use for: Academic research, market analysis, comprehensive studies
-
-**`explore_docs`** - Technical documentation specialist
-- Navigate documentation sites efficiently
-- Find APIs, guides, and technical references
-- Use for: Learning new technologies, API documentation
-
-**`map_website`** - Site structure analysis
-- Discover key pages and site architecture
-- Great for competitive analysis
-- Use for: Understanding competitors, site audits
-
-**`stream_retrieve`** - Real-time data access
+**`stream_content`** - Real-time data access
 - Connect to WebSocket streams and live data
-- Use for: Real-time feeds, streaming APIs
+- Clean, formatted streaming content
+- Use for: Real-time feeds, streaming APIs, live data monitoring
 
-**`extract_images`** - Visual content extraction
-- Pull images from web pages with OCR text extraction
-- Use for: Visual research, document analysis
+### Search Tools (1)
 
-**`batch_retrieve`** - Parallel content retrieval
-- Retrieve content from multiple resources simultaneously
-- Use for: Bulk data collection, comparative analysis
+**`google_search`** - Comprehensive Google Search with fallback
+- Direct Google Search scraping with advanced features
+- Rich snippets, traffic estimation, and search features detection
+- Cloudflare bypass and anti-detection measures
+- Automatic fallback to multi-engine search if direct scraping fails
+- Use for: High-quality Google Search results with detailed metadata
 
-### AI Processing Tools
+### Website Traversal Tools (1)
 
-**`adaptive_reason`** - Smart problem solving
-- Step-by-step reasoning with branching paths
-- Revise and extend your thinking process
-- Use for: Complex analysis, decision making, research synthesis
+**`traverse_website`** - Comprehensive website exploration
+- Multiple modes: research, docs, map
+- Research mode: General content exploration
+- Docs mode: Documentation-specific navigation
+- Map mode: Website structure mapping
+- Clean, formatted content from all pages
+- Use for: Academic research, competitive analysis, documentation exploration
 
-### Data Management Tools
+### Analysis Tools (2)
 
-**`add_nodes`** - Store your discoveries
-- Save facts, relationships, and insights
-- Build your personal knowledge graph
-- Use for: Preserving research, building knowledge base
+**`analyze_content`** - Content analysis and insights
+- Multiple analysis types: general, sentiment, technical, business
+- Key point extraction and summarization
+- Sentiment analysis with scoring
+- Technical term extraction
+- Business metrics identification
+- Use for: Content analysis, sentiment analysis, technical documentation review
 
-**`search_nodes`** - Find stored information
-- Search through your saved research
-- Quick access to previous discoveries
-- Use for: Retrieving insights, building on past work
+**`research_topic`** - End-to-end research workflow
+- Complete research pipeline from search to analysis
+- Automatic source discovery and content retrieval
+- Key findings extraction and synthesis
+- Research recommendations and insights
+- Use for: Comprehensive research projects, market analysis, academic studies
 
-**`get_full_store`** - View your knowledge graph
-- See all stored information and connections
-- Export your research data
-- Use for: Understanding your knowledge base, data export
+## Available Prompts (6 Total)
 
-**`add_links`** - Create relationships
-- Connect nodes in your knowledge graph
-- Build semantic relationships between concepts
-- Use for: Organizing research, creating connections
+Each tool has a corresponding prompt for optimal usage:
 
-**`remove_nodes`** - Clean up data
-- Remove unwanted nodes from your knowledge graph
-- Use for: Data cleanup, removing outdated information
+1. **`retrieve_content_prompt`** - Comprehensive content retrieval guidance
+2. **`stream_content_prompt`** - Real-time streaming content guidance
+3. **`google_search_prompt`** - Comprehensive search analysis guidance
+4. **`traverse_website_prompt`** - Website exploration guidance
+5. **`analyze_content_prompt`** - Content analysis guidance
+6. **`research_topic_prompt`** - End-to-end research guidance
 
-**`clear_store`** - Reset knowledge graph
-- Clear all stored data
-- Use for: Starting fresh, clearing test data
-
-## Common Workflows
-
-### Research a Topic Thoroughly
-```python
-# 1. Start with a search to find sources
-rival_retrieve(resource="search:artificial intelligence trends 2025", limit=10)
-
-# 2. Deep dive into promising sources
-research_website(url="https://promising-source.com", max_pages=8, store_data=True)
-
-# 3. Search your stored research
-search_nodes(query="key trends findings")
-
-# 4. Use AI reasoning to analyze
-adaptive_reason(step_content="Analyze the key AI trends...", ...)
-```
-
-### Explore Technical Documentation
-```python
-# 1. Start with the main docs page
-rival_retrieve(resource="https://docs.framework.com")
-
-# 2. Systematically explore documentation
-explore_docs(url="https://docs.framework.com", max_pages=20, store_data=True)
-
-# 3. Find specific information
-search_nodes(query="API authentication examples")
-```
-
-### Analyze a Competitor
-```python
-# 1. Map their website structure
-map_website(url="https://competitor.com", max_pages=25, store_data=True)
-
-# 2. Research specific areas
-research_website(url="https://competitor.com/products", max_pages=10, store_data=True)
-
-# 3. Analyze findings
-search_nodes(query="competitor features pricing")
-```
-
-## Configuration Options
+## Advanced Configuration
 
 ### Transport Methods
 | Transport | Best For | Command |
 |-----------|----------|---------|
-| **STDIO** | Claude Desktop, local AI tools | `python src/server.py` |
-| **HTTP** | Web apps, remote access | `python src/server.py --transport http` |
-| **SSE** | Real-time applications | `python src/server.py --transport sse` |
+| **STDIO** | Local AI tools, MCP clients | `python -m src.server` |
+| **HTTP** | Web apps, remote access | `python -m src.server --transport http` |
+| **SSE** | Real-time applications | `python -m src.server --transport sse` |
 
-### Integration Examples
-
-**With Cursor IDE:**
-```json
-{
-  "command": "python",
-  "args": ["src/server.py"],
-  "cwd": "/path/to/RivalSearchMCP"
-}
-```
-
-**HTTP API Usage:**
+### HTTP API Usage
 ```python
 import requests
 
@@ -208,26 +269,40 @@ response = requests.post("http://localhost:8000/mcp", json={
     "id": 1,
     "method": "tools/call",
     "params": {
-        "name": "rival_retrieve",
+        "name": "retrieve_content",
         "arguments": {"resource": "https://example.com"}
     }
 })
 ```
 
+
+```
+
 ## Testing & Development
 
 ```bash
-# Run comprehensive test suite
-python tests/test_suite.py
+# Run tests
+python -m pytest tests/ -v
 
 # Test with MCP Inspector (interactive testing)
-npx @modelcontextprotocol/inspector python src/server.py
+npx @modelcontextprotocol/inspector python -m src.server
 
-# Run specific tests
-python -m pytest tests/ -v
+# Run linting
+ruff check src/
+
+# Auto-fix code issues
+ruff check --fix src/
 ```
 
 ## Advanced Features
+
+### Google Search Features
+- **Direct Scraping**: Uses your exact working Google Search scraper
+- **Rich Snippets Detection**: Identifies featured snippets, knowledge panels, etc.
+- **Traffic Estimation**: Estimates search result traffic based on position
+- **Search Features**: Detects video results, news, site links, etc.
+- **Multi-Engine Fallback**: Falls back to other search engines if Google is blocked
+- **Advanced Metadata**: Comprehensive search result analysis
 
 ### Link Traversal Configuration
 - **`max_depth`**: How many link levels to follow (1-3 recommended)
@@ -239,12 +314,15 @@ python -m pytest tests/ -v
 - **Proxy Rotation**: Uses multiple proxy sources for reliability
 - **User Agent Rotation**: Mimics different browsers and devices
 - **Archive Fallbacks**: Falls back to archive services when blocked
+- **Cloudflare Bypass**: Advanced anti-bot protection bypass
 
-### Data Storage
-- **Graph Structure**: Stores information as interconnected nodes
-- **Fact Extraction**: Automatically extracts key information
-- **Relationship Mapping**: Understands connections between concepts
-- **Persistent Storage**: Keeps your research between sessions
+### Content Processing
+- **HTML Cleaning**: Remove scripts, ads, navigation, and unwanted elements
+- **Markdown Conversion**: Convert HTML to clean, readable markdown
+- **Single-Line Formatting**: Optimize content for efficient token usage
+- **OCR Integration**: Extract text from images using Tesseract
+- **Structured Extraction**: Extract titles, descriptions, and main content
+- **Search Result Formatting**: Clean, consistent search result presentation
 
 ## Support & Help
 
@@ -260,50 +338,17 @@ python -m pytest tests/ -v
 
 ## Requirements
 
-- **Python**: 3.10 or higher
+- **Python**: 3.12 or higher
 - **Internet Access**: Required for web retrieval
-- **Optional**: Tesseract for enhanced OCR functionality
+- **Tesseract**: For enhanced OCR functionality (optional but recommended)
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature-name`
 3. Add tests for new functionality
-4. Ensure tests pass: `python tests/test_suite.py`
+4. Ensure tests pass: `python -m pytest tests/`
 5. Submit a pull request
-
-## Architecture
-
-The server uses a **modular FastMCP architecture**:
-
-```
-src/
-├── server.py              # Main server entry point
-├── mcp_server.py          # Custom MCP server implementation
-├── tools/
-│   ├── web_tools.py       # Web retrieval and research tools
-│   ├── reasoning_tools.py # AI processing and reasoning
-│   └── data_tools.py      # Data storage and management
-├── core/
-│   ├── fetch.py           # Core fetching logic
-│   ├── search_engines.py  # Multi-engine search implementation
-│   ├── bypass.py          # Bypass techniques
-│   └── traversal.py       # Link traversal logic
-├── data_store/
-│   └── manager.py         # Knowledge graph management
-├── reasoning/
-│   └── processor.py       # AI reasoning engine
-├── prompts.py            # Reusable prompt templates
-├── resources.py          # Server information and help
-└── schemas/
-    └── schemas.py        # Data models and schemas
-```
-
-This design makes it easy to:
-- **Add new tools** to specific categories
-- **Maintain and update** functionality
-- **Understand the codebase** quickly
-- **Extend capabilities** as needed
 
 ---
 

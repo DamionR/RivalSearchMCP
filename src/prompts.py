@@ -3,224 +3,115 @@ MCP Prompts for RivalSearchMCP server.
 Provides reusable templates to guide LLM interactions with our tools.
 """
 
-from mcp.server import FastMCP
+from fastmcp import FastMCP
 
 
 def register_prompts(mcp: FastMCP):
     """Register all prompts with the MCP server."""
     
-    @mcp.prompt("web-research")
-    def web_research_prompt(topic: str, depth: str = "comprehensive") -> str:
-        """Guide for conducting web research on a topic."""
-        if depth == "quick":
-            return f"""I need to research "{topic}" quickly. Please:
-
-1. Use rival_retrieve with search:"{topic}" to find relevant sources
-2. Follow up with 2-3 key sources using rival_retrieve 
-3. Summarize key findings and provide sources
-
-Keep the research focused and concise."""
-        
-        elif depth == "comprehensive":
-            return f"""I need comprehensive research on "{topic}". Please:
-
-1. Start with rival_retrieve using search:"{topic}" to identify key sources
-2. Use research_website on the most promising sources (max_pages=8-12)
-3. Store findings with store_data=True for future reference
-4. Use search_nodes to cross-reference information
-5. Provide a detailed analysis with multiple perspectives
-
-Take your time to gather thorough information."""
-        
-        else:  # deep
-            return f"""I need deep, expert-level research on "{topic}". Please:
-
-1. Begin with multiple search queries using rival_retrieve with search:"{topic}"
-2. Use research_website on 3-4 authoritative sources (max_pages=15+ each)
-3. Use explore_docs if technical documentation is relevant
-4. Store all data with store_data=True
-5. Use adaptive_reason to analyze findings step-by-step
-6. Cross-reference with search_nodes queries
-7. Provide expert-level analysis with evidence and source citations
-
-This is for serious research - be thorough and methodical."""
-
-
-    @mcp.prompt("documentation-explorer")
-    def documentation_explorer_prompt(framework_or_api: str) -> str:
-        """Guide for exploring technical documentation comprehensively."""
-        return f"""I need to understand "{framework_or_api}" documentation thoroughly. Please:
-
-1. Start with rival_retrieve to get the main documentation page
-2. Use explore_docs with max_pages=20-30 to systematically explore
-3. Focus on these key areas:
-   - Getting started / quickstart
-   - API reference
-   - Examples and tutorials
-   - Best practices
-4. Store key information with store_data=True
-5. Provide a structured overview covering:
-   - Core concepts
-   - Key features
-   - Usage patterns
-   - Important APIs
-   - Example implementations
-
-Make this a complete technical reference."""
-
-
-    @mcp.prompt("competitive-analysis")
-    def competitive_analysis_prompt(company_or_product: str) -> str:
-        """Guide for conducting competitive analysis of companies or products."""
-        return f"""I need a competitive analysis of "{company_or_product}". Please:
-
-1. Use map_website to understand their site structure and offerings
-2. Use research_website on key product/service pages (max_pages=10-15)
-3. Look for:
-   - Product features and positioning
-   - Pricing information
-   - Target market
-   - Technology stack (if relevant)
-   - Company background
-4. Store findings with store_data=True
-5. Provide analysis covering:
-   - Strengths and differentiators
-   - Market positioning
-   - Key offerings
-   - Potential weaknesses or gaps
-   - Strategic insights
-
-Be thorough but respectful of their content."""
-
-
-    @mcp.prompt("research-synthesis")
-    def research_synthesis_prompt(topic: str) -> str:
-        """Multi-step prompt for synthesizing research from stored data."""
-        return f"""I've gathered research on '{topic}' and need to synthesize findings.
-
-Please help me synthesize this research by:
-
-1. Use search_nodes with queries related to '{topic}'
-2. Use get_full_store to see all available data
-3. Use adaptive_reason to analyze patterns and connections
-4. Provide a comprehensive synthesis with key insights
-
-Look for:
-- Common themes and patterns
-- Contradictions or conflicting information
-- Key insights and conclusions
-- Evidence strength and source quality
-- Knowledge gaps that need more research
-
-Provide a well-structured synthesis that combines all findings."""
-
-
-    @mcp.prompt("web-extraction")
-    def web_extraction_prompt(url: str, extraction_goal: str) -> str:
-        """Guide for extracting specific information from web content."""
-        return f"""I need to extract specific information from {url}.
-
-Goal: {extraction_goal}
+    @mcp.prompt
+    def retrieve_content_prompt(resource: str, limit: int = 5, extract_images: bool = False) -> str:
+        """Guide for enhanced content retrieval using retrieve_content."""
+        image_instruction = " and extract image text using OCR" if extract_images else ""
+        return f"""I need to retrieve content from: {resource}{image_instruction}
 
 Please:
-1. Use rival_retrieve to get the content from {url}
-2. If the content seems incomplete or you need more context:
-   - Try with traverse_links=True and max_depth=1 to get related pages
-   - Or use research_website if it's part of a larger site
-3. Extract the requested information focusing on:
-   - Accuracy and completeness
-   - Proper attribution
-   - Relevant context
-4. If storing for later use, set store_data=True
+1. Use retrieve_content with resource="{resource}", limit={limit}, and extract_images={extract_images}
+2. Extract the most relevant and comprehensive information
+3. Focus on accuracy and completeness
+4. Provide well-structured, clean content (no HTML)
+5. Include proper attribution and context
 
-Provide clear, well-structured results."""
+Deliver high-quality, formatted content suitable for analysis."""
 
 
-    @mcp.prompt("problem-solving")
-    def problem_solving_prompt(problem: str) -> str:
-        """Guide for systematic problem-solving with research and reasoning."""
-        return f"""I need help solving this problem: "{problem}"
-
-Please approach this systematically:
-
-1. **Research Phase:**
-   - Use rival_retrieve with relevant search queries
-   - Gather information from authoritative sources
-   - Store key findings with store_data=True
-
-2. **Analysis Phase:**
-   - Use adaptive_reason to break down the problem step-by-step
-   - Consider multiple approaches and solutions
-   - Identify key constraints and requirements
-
-3. **Solution Phase:**
-   - Synthesize research and reasoning into concrete solutions
-   - Provide step-by-step implementation guidance
-   - Include relevant examples and best practices
-
-4. **Validation:**
-   - Cross-reference with search_nodes for additional insights
-   - Ensure solution addresses all aspects of the problem
-
-Be thorough, analytical, and practical."""
-
-
-    @mcp.prompt("code-research")
-    def code_research_prompt(technology: str, use_case: str) -> str:
-        """Guide for researching code examples and implementation patterns."""
-        return f"""I need to research how to implement {use_case} using {technology}.
+    @mcp.prompt
+    def stream_content_prompt(url: str) -> str:
+        """Guide for retrieving streaming content using stream_content."""
+        return f"""I need to retrieve streaming content from: {url}
 
 Please:
+1. Use stream_content to get real-time streaming content
+2. Monitor the stream for relevant information
+3. Extract key data points and insights
+4. Provide analysis of the streaming content (no HTML)
+5. Note any patterns or trends in the data
 
-1. **Documentation Research:**
-   - Use explore_docs on official {technology} documentation
-   - Focus on relevant APIs and examples
-   - Look for best practices and patterns
-
-2. **Example Gathering:**
-   - Use rival_retrieve to search for: "search:{technology} {use_case} examples"
-   - Look for tutorial content and code repositories
-   - Use research_website on promising sources
-
-3. **Pattern Analysis:**
-   - Store code examples and patterns with store_data=True
-   - Use adaptive_reason to analyze different approaches
-   - Identify common patterns and best practices
-
-4. **Implementation Guide:**
-   - Provide step-by-step implementation guidance
-   - Include code examples and explanations
-   - Highlight potential pitfalls and solutions
-
-Focus on practical, working examples with clear explanations."""
+Focus on real-time data extraction and analysis."""
 
 
-    @mcp.prompt("fact-checking")
-    def fact_checking_prompt(claim: str) -> str:
-        """Guide for fact-checking claims using multiple sources."""
-        return f"""I need to fact-check this claim: "{claim}"
+    @mcp.prompt
+    def traverse_website_prompt(url: str, mode: str = "research", max_pages: int = 5) -> str:
+        """Guide for comprehensive website traversal using traverse_website."""
+        return f"""I need to traverse the website: {url} in {mode} mode
 
-Please conduct thorough verification:
+Please:
+1. Use traverse_website with url="{url}", mode="{mode}", and max_pages={max_pages}
+2. Explore the website systematically based on the mode:
+   - research: General content exploration
+   - docs: Documentation-specific navigation
+   - map: Website structure mapping
+3. Extract key information from multiple pages
+4. Provide structured analysis of the website content
+5. Focus on comprehensive coverage and insights
 
-1. **Source Gathering:**
-   - Use rival_retrieve with multiple search queries
-   - Look for authoritative sources (academic, official, reputable news)
-   - Gather diverse perspectives
+Deliver thorough website analysis with clean, formatted content."""
 
-2. **Cross-Verification:**
-   - Use research_website on 2-3 authoritative sources
-   - Store findings with store_data=True
-   - Look for consensus or contradictions
 
-3. **Evidence Analysis:**
-   - Use adaptive_reason to evaluate evidence quality
-   - Consider source credibility and potential bias
-   - Look for primary vs secondary sources
+    @mcp.prompt
+    def google_search_prompt(query: str, num_results: int = 10) -> str:
+        """Guide for comprehensive Google search using the combined google_search tool."""
+        return f"""I need comprehensive search results for: "{query}"
 
-4. **Conclusion:**
-   - Provide clear assessment: Verified/Disputed/Unclear
-   - Present supporting evidence
-   - Note any limitations or caveats
-   - Include source citations
+Please:
+1. Use google_search with query="{query}" and num_results={num_results}
+2. Analyze the search results for relevance and quality
+3. Extract key information from the top results
+4. Identify patterns in search results and metadata
+5. Provide insights on:
+   - Search result quality and relevance
+   - Featured content and snippets
+   - Source credibility and diversity
+   - Search metadata and features
 
-Be objective and thorough in verification."""
+Focus on comprehensive search analysis and result evaluation."""
+
+
+    @mcp.prompt
+    def analyze_content_prompt(content: str, analysis_type: str = "general") -> str:
+        """Guide for content analysis using analyze_content."""
+        return f"""I need to analyze content with type: {analysis_type}
+
+Please:
+1. Use analyze_content with content and analysis_type="{analysis_type}"
+2. Extract key insights and patterns from the content
+3. Provide structured analysis based on the type:
+   - general: Overall content analysis
+   - sentiment: Sentiment analysis
+   - technical: Technical term extraction
+   - business: Business metrics analysis
+4. Generate actionable insights and recommendations
+5. Focus on extracting meaningful, structured information
+
+Deliver comprehensive content analysis with actionable insights."""
+
+
+    @mcp.prompt
+    def research_topic_prompt(topic: str, max_sources: int = 5) -> str:
+        """Guide for end-to-end research using research_topic."""
+        return f"""I need to conduct comprehensive research on: {topic}
+
+Please:
+1. Use research_topic with topic="{topic}" and max_sources={max_sources}
+2. Execute a complete research workflow:
+   - Search for relevant sources
+   - Retrieve and analyze content
+   - Synthesize findings
+   - Generate insights
+3. Provide structured research results
+4. Include key findings and recommendations
+5. Focus on comprehensive, actionable research
+
+Deliver end-to-end research with actionable insights and recommendations."""
+
+

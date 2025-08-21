@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
 Comprehensive MCP Test Suite
-Combines all testing approaches with real-world scenarios across multiple industries.
-Tests MCP protocol communication over STDIO with diverse use cases.
+Tests the RivalSearchMCP server using proper MCP protocol communication.
 """
 
 import sys
 import os
+import asyncio
 import json
 import subprocess
 import time
-import asyncio
-import signal
 from typing import Dict, Any, List
 from dataclasses import dataclass
 from datetime import datetime
@@ -19,6 +17,9 @@ from datetime import datetime
 # Add project root to path for imports
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
+
+# Import MCP types for validation
+from mcp import Tool
 
 @dataclass
 class TestScenario:
@@ -46,15 +47,15 @@ class ComprehensiveMCPTestSuite:
                 name="Latest AI News",
                 industry="Technology",
                 description="Get latest AI news from TechCrunch",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://techcrunch.com/tag/artificial-intelligence/", "limit": 1, "max_length": 400}
             ),
             TestScenario(
                 name="Quantum Computing Search",
                 industry="Technology",
                 description="Search for quantum computing developments",
-                tool_name="google_search",
-                arguments={"query": "quantum computing breakthroughs 2025", "max_results": 2}
+                tool_name="google_search_scrape",
+                arguments={"query": "quantum computing breakthroughs 2025", "num_results": 2}
             ),
             TestScenario(
                 name="React Documentation",
@@ -69,22 +70,15 @@ class ComprehensiveMCPTestSuite:
                 name="Crypto Market News",
                 industry="Finance",
                 description="Get cryptocurrency market updates",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://cointelegraph.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="ESG Investment Trends",
                 industry="Finance",
                 description="Search for ESG investment trends",
-                tool_name="google_search",
-                arguments={"query": "ESG sustainable investing trends 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Crypto Research Data",
-                industry="Finance",
-                description="Store cryptocurrency research",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Crypto_Analysis_2025", "type": "cryptocurrency", "facts": ["Bitcoin adoption is increasing", "DeFi protocols are growing"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "ESG sustainable investing trends 2025", "num_results": 2}
             ),
             
             # HEALTHCARE INDUSTRY - New focus areas
@@ -92,22 +86,15 @@ class ComprehensiveMCPTestSuite:
                 name="Mental Health Research",
                 industry="Healthcare",
                 description="Research mental health developments",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.psychiatry.org/newsroom", "limit": 1, "max_length": 400}
             ),
             TestScenario(
                 name="Gene Therapy Search",
                 industry="Healthcare",
                 description="Search for gene therapy advances",
-                tool_name="google_search",
-                arguments={"query": "gene therapy clinical trials 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Mental Health Data",
-                industry="Healthcare",
-                description="Store mental health research",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Mental_Health_Research", "type": "psychiatry", "facts": ["Digital therapy is expanding", "AI diagnostics are improving"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "gene therapy clinical trials 2025", "num_results": 2}
             ),
             
             # E-COMMERCE INDUSTRY - Emerging trends
@@ -115,22 +102,15 @@ class ComprehensiveMCPTestSuite:
                 name="Social Commerce News",
                 industry="E-commerce",
                 description="Research social commerce trends",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.digitalcommerce360.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="AR Shopping Search",
                 industry="E-commerce",
                 description="Search for AR shopping technology",
-                tool_name="google_search",
-                arguments={"query": "augmented reality shopping experiences 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Social Commerce Data",
-                industry="E-commerce",
-                description="Store social commerce insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Social_Commerce_2025", "type": "ecommerce", "facts": ["Social shopping is growing", "Live streaming sales are popular"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "augmented reality shopping experiences 2025", "num_results": 2}
             ),
             
             # EDUCATION INDUSTRY - Modern learning
@@ -138,22 +118,15 @@ class ComprehensiveMCPTestSuite:
                 name="EdTech Innovations",
                 industry="Education",
                 description="Research educational technology innovations",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.edsurge.com/", "limit": 1, "max_length": 350}
             ),
             TestScenario(
                 name="VR Education Search",
                 industry="Education",
                 description="Search for VR in education",
-                tool_name="google_search",
-                arguments={"query": "virtual reality education applications 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="EdTech Research Data",
-                industry="Education",
-                description="Store EdTech research",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "EdTech_Innovations", "type": "education", "facts": ["VR classrooms are emerging", "Personalized learning is key"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "virtual reality education applications 2025", "num_results": 2}
             ),
             
             # MANUFACTURING INDUSTRY - Advanced manufacturing
@@ -161,22 +134,15 @@ class ComprehensiveMCPTestSuite:
                 name="3D Printing News",
                 industry="Manufacturing",
                 description="Research 3D printing developments",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://3dprint.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="Robotics Manufacturing",
                 industry="Manufacturing",
                 description="Search for robotics in manufacturing",
-                tool_name="google_search",
-                arguments={"query": "industrial robotics manufacturing automation 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="3D Printing Data",
-                industry="Manufacturing",
-                description="Store 3D printing insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "3D_Printing_Trends", "type": "manufacturing", "facts": ["Metal 3D printing is growing", "Mass customization is possible"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "industrial robotics manufacturing automation 2025", "num_results": 2}
             ),
             
             # REAL ESTATE INDUSTRY - Proptech focus
@@ -184,22 +150,15 @@ class ComprehensiveMCPTestSuite:
                 name="Proptech News",
                 industry="Real Estate",
                 description="Research property technology news",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.proptechinsight.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="Smart Home Search",
                 industry="Real Estate",
                 description="Search for smart home technology",
-                tool_name="google_search",
-                arguments={"query": "smart home real estate technology 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Proptech Data",
-                industry="Real Estate",
-                description="Store proptech insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Proptech_Trends", "type": "real_estate", "facts": ["Smart homes are in demand", "Virtual tours are standard"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "smart home real estate technology 2025", "num_results": 2}
             ),
             
             # TRAVEL INDUSTRY - Sustainable travel
@@ -207,22 +166,15 @@ class ComprehensiveMCPTestSuite:
                 name="Sustainable Travel News",
                 industry="Travel",
                 description="Research sustainable travel trends",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.nationalgeographic.com/travel/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="Eco Tourism Search",
                 industry="Travel",
                 description="Search for eco-tourism trends",
-                tool_name="google_search",
-                arguments={"query": "eco tourism sustainable travel 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Sustainable Travel Data",
-                industry="Travel",
-                description="Store sustainable travel insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Sustainable_Travel", "type": "travel", "facts": ["Eco-tourism is growing", "Carbon offsetting is popular"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "eco tourism sustainable travel 2025", "num_results": 2}
             ),
             
             # MEDIA & ENTERTAINMENT - New media
@@ -230,22 +182,15 @@ class ComprehensiveMCPTestSuite:
                 name="Podcast Industry News",
                 industry="Media & Entertainment",
                 description="Research podcast industry developments",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.podcastinsights.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="Metaverse Entertainment",
                 industry="Media & Entertainment",
                 description="Search for metaverse entertainment",
-                tool_name="google_search",
-                arguments={"query": "metaverse entertainment virtual worlds 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Podcast Industry Data",
-                industry="Media & Entertainment",
-                description="Store podcast industry insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Podcast_Industry", "type": "media", "facts": ["Podcast advertising is growing", "Interactive podcasts are emerging"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "metaverse entertainment virtual worlds 2025", "num_results": 2}
             ),
             
             # AGRICULTURE INDUSTRY - Smart farming
@@ -253,29 +198,22 @@ class ComprehensiveMCPTestSuite:
                 name="Vertical Farming News",
                 industry="Agriculture",
                 description="Research vertical farming developments",
-                tool_name="rival_retrieve",
+                tool_name="rival_retrieve_tool",
                 arguments={"resource": "https://www.verticalfarmdaily.com/", "limit": 1, "max_length": 300}
             ),
             TestScenario(
                 name="Drone Farming Search",
                 industry="Agriculture",
                 description="Search for drone technology in farming",
-                tool_name="google_search",
-                arguments={"query": "agricultural drones farming technology 2025", "max_results": 2}
-            ),
-            TestScenario(
-                name="Vertical Farming Data",
-                industry="Agriculture",
-                description="Store vertical farming insights",
-                tool_name="add_nodes",
-                arguments={"nodes": [{"name": "Vertical_Farming", "type": "agriculture", "facts": ["Urban farming is growing", "LED lighting is efficient"]}]}
+                tool_name="google_search_scrape",
+                arguments={"query": "agricultural drones farming technology 2025", "num_results": 2}
             )
         ]
     
     def start_server(self):
-        """Start the custom MCP server."""
-        print("🚀 Starting Custom MCP Server...")
-        cmd = [sys.executable, "src/mcp_server.py"]
+        """Start the MCP server."""
+        print("🚀 Starting MCP Server...")
+        cmd = [sys.executable, "-m", "src.server"]
         self.server_process = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -395,7 +333,7 @@ class ComprehensiveMCPTestSuite:
             }
             
             # Use longer timeouts to allow tools to complete
-            timeout = 60 if scenario.tool_name == "explore_docs" else 45
+            timeout = 60 if scenario.tool_name in ["explore_docs", "research_website", "map_website"] else 45
             response = self.send_mcp_request(call_request, timeout)
             
             if "result" in response:

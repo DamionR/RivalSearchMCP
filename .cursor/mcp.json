@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "rival-search-mcp": {
+      "command": "/Users/damionrashford/RivalSearchMCP/.venv-py313/bin/python",
+      "args": ["-m", "src.server"]
+    }
+  }
+}

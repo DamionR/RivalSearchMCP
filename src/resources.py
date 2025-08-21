@@ -1,11 +1,11 @@
 """
 MCP Resources for RivalSearchMCP server.
-Provides data access endpoints for LLMs to understand server capabilities and stored data.
+Provides data access endpoints for LLMs to understand server capabilities and configuration.
 """
 
 import json
-from mcp.server import FastMCP
-from src.data_store.manager import store_manager
+from fastmcp import FastMCP
+
 from src.config import DEFAULT_UA_LIST, PAYWALL_INDICATORS, ARCHIVE_FALLBACKS
 
 
@@ -18,7 +18,7 @@ def register_resources(mcp: FastMCP):
         info = {
             "name": "RivalSearchMCP",
             "version": "2.0.0",
-            "description": "Advanced MCP server for web retrieval, data storage, and adaptive reasoning",
+            "description": "Advanced MCP server for web retrieval, search, and content discovery",
             "capabilities": {
                 "web_retrieval": {
                     "bypass_protection": True,
@@ -27,24 +27,15 @@ def register_resources(mcp: FastMCP):
                     "link_traversal": True,
                     "proxy_rotation": True
                 },
-                "data_storage": {
-                    "type": "Graph-based (NetworkX)",
-                    "operations": ["CRUD", "search", "relationships"],
-                    "persistence": "JSON-based",
-                    "query_interface": True
-                },
-                "reasoning": {
-                    "type": "Adaptive step-by-step",
-                    "features": ["branching", "revisions", "context_awareness"],
-                    "multi_step": True
-                },
+
+
                 "transports": ["STDIO", "HTTP", "SSE"],
                 "structured_outputs": True,
                 "type_safety": "Pydantic models"
             },
-            "tools_count": 15,
+            "tools_count": 8,
             "prompts_count": 8,
-            "resources_count": 6
+            "resources_count": 4
         }
         return json.dumps(info, indent=2)
     
@@ -63,19 +54,19 @@ def register_resources(mcp: FastMCP):
                 "research_website": {
                     "description": "Deep research across website content",
                     "features": ["content filtering", "research optimization"],
-                    "parameters": ["url", "max_pages", "store_data"],
+                    "parameters": ["url", "max_pages"],
                     "use_cases": ["topic research", "content discovery"]
                 },
                 "explore_docs": {
                     "description": "Technical documentation site navigation",
                     "features": ["documentation patterns", "API focus"],
-                    "parameters": ["url", "max_pages", "store_data"],
+                    "parameters": ["url", "max_pages"],
                     "use_cases": ["API documentation", "technical guides"]
                 },
                 "map_website": {
                     "description": "Website structure and content mapping",
                     "features": ["site architecture", "key page discovery"],
-                    "parameters": ["url", "max_pages", "store_data"],
+                    "parameters": ["url", "max_pages"],
                     "use_cases": ["site audits", "competitive analysis"]
                 },
                 "stream_retrieve": {
@@ -85,34 +76,8 @@ def register_resources(mcp: FastMCP):
                     "use_cases": ["real-time data", "streaming APIs"]
                 }
             },
-            "ai_processing": {
-                "adaptive_reason": {
-                    "description": "Multi-step reasoning with branching support",
-                    "features": ["revisions", "context awareness", "step-by-step analysis"],
-                    "parameters": ["step_content", "step_num", "estimated_steps", "continue_reasoning"],
-                    "use_cases": ["complex problem solving", "analysis", "reasoning chains"]
-                }
-            },
-            "data_management": {
-                "add_nodes": {
-                    "description": "Store structured data as graph nodes",
-                    "features": ["facts", "relationships", "persistent storage"],
-                    "parameters": ["nodes"],
-                    "use_cases": ["knowledge storage", "data persistence"]
-                },
-                "search_nodes": {
-                    "description": "Query stored data by content",
-                    "features": ["full-text search", "stored information"],
-                    "parameters": ["query"],
-                    "use_cases": ["information retrieval", "knowledge queries"]
-                },
-                "get_full_store": {
-                    "description": "Retrieve complete knowledge graph",
-                    "features": ["all nodes", "links", "relationships"],
-                    "parameters": [],
-                    "use_cases": ["data export", "full context"]
-                }
-            }
+
+
         }
         return json.dumps(tools, indent=2)
     
@@ -125,9 +90,8 @@ def register_resources(mcp: FastMCP):
                 "description": "Comprehensive research on a topic",
                 "steps": [
                     "rival_retrieve(resource='search:topic', limit=10)",
-                    "research_website(url='promising_source', max_pages=8, store_data=True)",
-                    "search_nodes(query='key findings')",
-                    "adaptive_reason for analysis"
+                    "research_website(url='promising_source', max_pages=8)",
+                    "Analyze and synthesize findings"
                 ]
             },
             "documentation_exploration": {
@@ -135,7 +99,7 @@ def register_resources(mcp: FastMCP):
                 "steps": [
                     "rival_retrieve(resource='https://docs.example.com')",
                     "explore_docs(url='https://docs.example.com', max_pages=20)",
-                    "Store key information for reference"
+                    "Extract and organize key information"
                 ]
             },
             "competitive_analysis": {
@@ -143,7 +107,7 @@ def register_resources(mcp: FastMCP):
                 "steps": [
                     "map_website(url='https://competitor.com', max_pages=25)",
                     "research_website(url='product_pages', max_pages=10)",
-                    "Store and analyze findings"
+                    "Analyze and document findings"
                 ]
             },
             "link_traversal": {
@@ -158,86 +122,7 @@ def register_resources(mcp: FastMCP):
         return json.dumps(examples, indent=2)
     
     
-    @mcp.resource("data://store-summary")
-    def get_store_summary() -> str:
-        """Get summary of currently stored data in the knowledge graph."""
-        try:
-            full_store = store_manager.get_full_store()
-            
-            summary = {
-                "nodes_count": len(full_store.get('nodes', [])),
-                "links_count": len(full_store.get('links', [])),
-                "node_types": {},
-                "recent_nodes": []
-            }
-            
-            # Analyze node types
-            nodes = full_store.get('nodes', [])
-            for node in nodes:
-                node_type = node.get('type', 'unknown')
-                summary['node_types'][node_type] = summary['node_types'].get(node_type, 0) + 1
-            
-            # Get recent nodes (last 5)
-            recent_nodes = nodes[-5:] if len(nodes) > 5 else nodes
-            for node in recent_nodes:
-                summary['recent_nodes'].append({
-                    'name': node.get('name', 'unnamed'),
-                    'type': node.get('type', 'unknown'),
-                    'facts_count': len(node.get('facts', []))
-                })
-            
-            if summary['nodes_count'] == 0:
-                summary['message'] = "No data currently stored. Use store_data=True with retrieval tools to build knowledge base."
-            
-            return json.dumps(summary, indent=2)
-            
-        except Exception as e:
-            return json.dumps({
-                "error": f"Could not access data store: {str(e)}",
-                "nodes_count": 0,
-                "message": "Data store may be empty or inaccessible"
-            }, indent=2)
-    
-    
-    @mcp.resource("data://stored-nodes/{query}")
-    def search_stored_nodes(query: str) -> str:
-        """Search stored nodes by query and return matching results."""
-        try:
-            if not query or query.strip() == "":
-                return json.dumps({
-                    "error": "Query parameter is required",
-                    "example": "Use: data://stored-nodes/your-search-term"
-                }, indent=2)
-            
-            # Use the search functionality
-            results = store_manager.search_nodes(query)
-            
-            search_results = {
-                "query": query,
-                "matches_found": len(results.get('nodes', [])),
-                "nodes": [],
-                "links": results.get('links', [])
-            }
-            
-            # Format node results
-            for node in results.get('nodes', []):
-                search_results['nodes'].append({
-                    'name': node.get('name', 'unnamed'),
-                    'type': node.get('type', 'unknown'),
-                    'facts': node.get('facts', [])[:5],  # Limit to first 5 facts
-                    'total_facts': len(node.get('facts', []))
-                })
-            
-            if search_results['matches_found'] == 0:
-                search_results['message'] = f"No nodes found matching '{query}'. Try different search terms."
-            
-            return json.dumps(search_results, indent=2)
-            
-        except Exception as e:
-            return json.dumps({
-                "error": f"Search failed: {str(e)}",
-                "query": query
-            }, indent=2)
+
     
     
     @mcp.resource("config://bypass-settings")
