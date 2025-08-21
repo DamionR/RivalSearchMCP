@@ -24,8 +24,7 @@ Add this configuration to your MCP client:
 {
   "mcpServers": {
     "RivalSearchMCP": {
-      "url": "https://RivalSearchMCP.fastmcp.app/mcp",
-      "headers": {}
+      "url": "https://RivalSearchMCP.fastmcp.app/mcp"
     }
   }
 }
