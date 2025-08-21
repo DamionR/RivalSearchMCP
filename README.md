@@ -1,3 +1,5 @@
+[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/damionrashford-rivalsearchmcp-badge.png)](https://mseep.ai/app/damionrashford-rivalsearchmcp)
+
 # RivalSearchMCP
 
 Advanced MCP server for web retrieval, search, and content discovery.
