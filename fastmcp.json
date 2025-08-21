@@ -2,7 +2,7 @@
   "$schema": "https://gofastmcp.com/schemas/fastmcp_config/v1.json",
   "entrypoint": {
     "file": "server.py",
-    "object": "mcp"
+    "object": "app"
   },
   "deployment": {
     "transport": "http",

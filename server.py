@@ -3,9 +3,6 @@
 RivalSearchMCP Server - Advanced Web Research and Content Discovery
 """
 
-import argparse
-import sys
-
 from fastmcp import FastMCP
 
 # Import modular tool registration functions
@@ -22,18 +19,18 @@ from src.resources import register_resources
 from src.logger import logger
 
 # Create FastMCP server instance
-mcp = FastMCP("rival-search-mcp")
+app = FastMCP("rival-search-mcp")
 
 # Register all tools using modular approach
-register_retrieval_tools(mcp)
-register_search_tools(mcp)
-register_traversal_tools(mcp)
-register_analysis_tools(mcp)
+register_retrieval_tools(app)
+register_search_tools(app)
+register_traversal_tools(app)
+register_analysis_tools(app)
 
 # Register prompts and resources
-register_prompts(mcp)
-register_resources(mcp)
+register_prompts(app)
+register_resources(app)
 
 if __name__ == "__main__":
     # For CLI compatibility, run directly with STDIO transport
-    mcp.run()
+    app.run()
