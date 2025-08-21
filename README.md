@@ -15,7 +15,7 @@ RivalSearchMCP provides tools for accessing web content, performing Google searc
 
 ## How to get started
 
-### Connect to Live Server (Recommended)
+### Connect to Live Server
 
 Add this configuration to your MCP client:
 
@@ -35,19 +35,11 @@ Add this configuration to your MCP client:
 - Go to Settings → Add Remote Server
 - Enter URL: `https://RivalSearchMCP.fastmcp.app/mcp`
 
-### Local Installation (For Developers)
+**For VS Code:**
+- Add the above JSON to your `.vscode/mcp.json` file
 
-```bash
-# Clone repository
-git clone https://github.com/damionrashford/RivalSearchMCP.git
-cd RivalSearchMCP
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run server
-python server.py
-```
+**For Claude Code:**
+- Use the built-in MCP management: `claude mcp add RivalSearchMCP --url https://RivalSearchMCP.fastmcp.app/mcp`
 
 ## Available Tools
 
@@ -57,6 +49,10 @@ python server.py
 - **traverse_website** - Comprehensive website traversal with different modes (research, docs, map)
 - **analyze_content** - Analyze content and extract insights
 - **research_topic** - End-to-end research workflow for a topic
+
+## Documentation
+
+- [Usage Guide](docs/usage.md) - Complete guide to using all 6 tools
 
 ## Who maintains this project
 
