@@ -1,16 +1,42 @@
 # RivalSearchMCP Setup Guide
 
-## 🚀 Quick Start
+## 🚀 **Quick Start - Connect to Live Server**
 
-### 🌐 **Use the Live Server (Recommended)**
+### **Remote MCP Configuration**
 
-The easiest way to use RivalSearchMCP is to connect to the live deployment:
+The easiest way to use RivalSearchMCP is to connect to the live deployment. Add this configuration to your MCP client:
 
-**URL:** `https://RivalSearchMCP.fastmcp.app/mcp`
+**For Cursor:**
+```json
+{
+  "mcpServers": {
+    "RivalSearchMCP": {
+      "url": "https://RivalSearchMCP.fastmcp.app/mcp",
+      "headers": {}
+    }
+  }
+}
+```
 
-Simply add this URL to any MCP-compatible client (Claude Desktop, Cursor IDE, VS Code, etc.) and start using advanced web research capabilities immediately.
+**For Claude Desktop:**
+- Go to Settings → Add Remote Server
+- Enter URL: `https://RivalSearchMCP.fastmcp.app/mcp`
 
-### 🛠️ **Local Installation (Development)**
+**For VS Code:**
+- Add the above JSON to your `.vscode/mcp.json` file
+
+**For Claude Code:**
+- Use the built-in MCP management: `claude mcp add RivalSearchMCP --url https://RivalSearchMCP.fastmcp.app/mcp`
+
+### **What You Get**
+- **8 Advanced Tools** for web research and content discovery
+- **Bypass Any Restrictions** - Get past paywalls, bot blocks, and rate limits
+- **Google Search Scraping** - Direct access with metadata extraction
+- **Intelligent Content Retrieval** - Smart parsing and analysis
+- **Website Traversal** - Discover and explore related content
+- **Data Management** - Store and retrieve research data
+
+## 🛠️ **Local Installation (For Developers)**
 
 If you want to run the server locally for development or customization:
 
@@ -28,240 +54,154 @@ cd RivalSearchMCP
 
 # 2. Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Verify installation
-python -m pytest tests/ -v
-```
-
-## 🖥️ Starting the Server
-
-### Basic Server Startup
-```bash
-# For Claude Desktop (default)
+# 4. Run server
 python server.py
-
-# With HTTP transport for web apps
-python server.py --transport http --port 8000
-
-# With SSE transport for real-time apps
-python server.py --transport sse --port 8001
-
-# View all options
-python server.py --help
 ```
 
-### Server Options
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--transport` | Protocol (stdio/http/sse) | stdio |
-| `--host` | Host address | localhost |
-| `--port` | HTTP port | 8000 |
-| `--sse-port` | SSE port | 8001 |
+### **Local MCP Configuration**
 
-## 🔌 Integration Setup
+For local development, use this configuration:
 
-### Claude Desktop Configuration
-
-1. **Find your config file:**
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-2. **Add the server configuration:**
+**For Cursor:**
 ```json
 {
   "mcpServers": {
-    "rival-search": {
+    "RivalSearchMCP": {
       "command": "python",
-      "args": ["/absolute/path/to/RivalSearchMCP/server.py"],
-      "env": {
-        "DEBUG": "false"
-      }
+      "args": ["server.py"]
     }
   }
 }
 ```
 
-3. **Restart Claude Desktop** to load the new server
-
-### Cursor IDE Setup
-
-1. **Open Cursor IDE settings**
-2. **Navigate to MCP configuration**
-3. **Add server configuration:**
+**For Claude Desktop:**
 ```json
 {
-  "command": "python",
-  "args": ["server.py"],
-  "cwd": "/absolute/path/to/RivalSearchMCP"
+  "mcpServers": {
+    "RivalSearchMCP": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "--with", "httpx",
+        "--with", "cloudscraper",
+        "--with", "beautifulsoup4",
+        "--with", "lxml",
+        "--with", "pillow",
+        "--with", "websockets",
+        "--with", "pytesseract",
+        "--with", "fake-useragent",
+        "--with", "selenium",
+        "fastmcp",
+        "run",
+        "server.py"
+      ]
+    }
+  }
 }
 ```
 
-### Other MCP Clients
+**For VS Code:**
+```json
+{
+  "mcpServers": {
+    "RivalSearchMCP": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "--with", "httpx",
+        "--with", "cloudscraper",
+        "--with", "beautifulsoup4",
+        "--with", "lxml",
+        "--with", "pillow",
+        "--with", "websockets",
+        "--with", "pytesseract",
+        "--with", "fake-useragent",
+        "--with", "selenium",
+        "fastmcp",
+        "run",
+        "server.py"
+      ]
+    }
+  }
+}
+```
 
-For any MCP-compatible client:
+### **FastMCP CLI Installation (Recommended for Local)**
+
+The easiest way to install locally is using FastMCP's CLI:
+
 ```bash
-# STDIO transport (most common)
-python /path/to/RivalSearchMCP/server.py
+# For Cursor
+fastmcp install cursor server.py
 
-# HTTP endpoint
-http://localhost:8000/mcp
+# For Claude Desktop
+fastmcp install claude-desktop server.py
 
-# SSE endpoint  
-http://localhost:8001/sse
+# For Claude Code
+fastmcp install claude-code server.py
+
+# Generate MCP JSON config
+fastmcp install mcp-json server.py --name "RivalSearchMCP"
 ```
 
-## 🧪 Testing Your Setup
+## 🔧 **Configuration Options**
 
-### Verify Installation
+### **Environment Variables**
+If your server needs environment variables:
+
 ```bash
-# Run all tests
-python -m pytest tests/ -v
+# With FastMCP CLI
+fastmcp install cursor server.py --env DEBUG=true --env API_KEY=your-key
 
-# Test specific components
-python -m pytest tests/test_server.py -v  # Server functionality
-python -m pytest tests/test_fetch.py -v   # Web retrieval
-python -m pytest tests/test_manager.py -v # Data storage
+# Or load from .env file
+fastmcp install cursor server.py --env-file .env
 ```
 
-### Interactive Testing
+### **Python Version Control**
 ```bash
-# Launch MCP Inspector for interactive testing
-npx @modelcontextprotocol/inspector python server.py
+# Use specific Python version
+fastmcp install cursor server.py --python 3.11
 
-# Test basic functionality in inspector:
-# 1. Try retrieve_content with a simple URL
-# 2. Test search functionality with google_search
-# 3. Test data storage with add_nodes
+# Run within project directory
+fastmcp install cursor server.py --project /path/to/project
 ```
 
-### Manual Server Test
-```bash
-# Start server manually
-python server.py
+## 🎯 **Verification**
 
-# Should see output like:
-# "RivalSearchMCP server started..."
-# "Listening on stdio transport..."
-```
+After configuration, you should see:
+- **Cursor**: MCP tools available in AI assistant
+- **Claude Desktop**: Hammer icon (🔨) in bottom left of input box
+- **Claude Code**: Tools available in Claude's interface
+- **VS Code**: MCP tools accessible in workspace
 
-## ⚙️ Configuration Options
+## 📋 **Requirements**
 
-### Environment Variables
-Create a `.env` file in the project root:
-```bash
-# Logging level
-DEBUG=false
+### **For Local Installation**
+- **uv**: Required for FastMCP CLI installations
+  ```bash
+  # macOS
+  brew install uv
+  
+  # Linux/Windows
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+- **Python 3.11+**: Required for all installations
+- **Dependencies**: Automatically handled by FastMCP CLI or manually installed
 
-# Proxy settings (optional)
-HTTP_PROXY=http://proxy:port
-HTTPS_PROXY=http://proxy:port
+### **For Remote Connection**
+- **No installation required** - just add the configuration and connect!
 
-# OCR settings (optional)
-TESSERACT_PATH=/usr/bin/tesseract
-```
+## 🚀 **Ready to Start**
 
-### Server Customization
-The modular architecture allows easy customization:
+**For most users:** Use the Remote MCP configuration at the top - no installation needed!
 
-```python
-# server.py - Main server entry point
-# src/tools/ - Tool categories (web, reasoning, data)
-# src/prompts.py - Reusable prompt templates
-# src/resources.py - Server information and help
-```
+**For developers:** Use the local installation instructions above for development and customization.
 
-### Data Storage Location
-By default, data is stored in:
-- **Knowledge Graph**: `data/store.json`
-- **Logs**: `logs/rival_search.log`
-
-To change storage location, modify `src/config.py`.
-
-## 🔍 Troubleshooting Setup
-
-### Common Issues
-
-**Python Version Error**
-```bash
-# Check Python version
-python --version
-
-# Must be 3.8+, upgrade if needed
-```
-
-**Module Import Errors**
-```bash
-# Ensure virtual environment is activated
-source .venv/bin/activate
-
-# Reinstall dependencies
-pip install -r requirements.txt --force-reinstall
-```
-
-**Permission Errors**
-```bash
-# On Unix systems, ensure Python executable has permission
-chmod +x .venv/bin/python
-
-# Or use absolute path in configuration
-which python
-```
-
-**Network Connection Issues**
-```bash
-# Test basic connectivity
-curl -I https://google.com
-
-# Check proxy settings if behind corporate firewall
-echo $HTTP_PROXY
-echo $HTTPS_PROXY
-```
-
-**Claude Desktop Not Loading Server**
-- Verify JSON syntax in config file
-- Use absolute paths in configuration
-- Check Claude Desktop logs for error messages
-- Restart Claude Desktop after config changes
-
-### Verification Steps
-
-1. **Server starts without errors**
-   ```bash
-   python server.py --help
-   ```
-
-2. **Tests pass successfully**
-   ```bash
-   python -m pytest tests/ -v
-   ```
-
-3. **MCP Inspector connects**
-   ```bash
-   npx @modelcontextprotocol/inspector python server.py
-   ```
-
-4. **Basic tool works**
-   - Test `retrieve_content` with a simple URL
-   - Verify response contains expected content
-
-### Getting Additional Help
-
-- **Check logs**: Look for error messages in console output
-- **Test incrementally**: Start with basic functionality
-- **Use MCP Inspector**: Interactive testing helps identify issues
-- **Verify dependencies**: Ensure all required packages are installed
-
-## 🚀 Next Steps
-
-Once setup is complete:
-
-1. **Read the Usage Guide**: Learn common workflows and patterns
-2. **Try the Examples**: Start with simple retrieval operations
-3. **Explore Link Traversal**: Test intelligent content discovery
-4. **Build Knowledge Graphs**: Store and organize your research
-
-Your RivalSearchMCP server is now ready to enhance your AI assistant with powerful web research capabilities!
+Connect to: **`https://RivalSearchMCP.fastmcp.app/mcp`**

@@ -15,15 +15,28 @@ MCP Inspector is the official debugging and testing tool for Model Context Proto
 
 ## 🚀 Quick Start
 
-### Basic Inspector Launch
+### Testing Remote MCP Server (Recommended)
 ```bash
-# Start with your FastMCP server (recommended)
+# Test the live server directly
+npx @modelcontextprotocol/inspector --url https://RivalSearchMCP.fastmcp.app/mcp
+```
+
+This command will:
+1. Download and run MCP Inspector (if not cached)
+2. Connect to the live RivalSearchMCP server
+3. Launch web UI at `http://localhost:6274`
+4. Generate a secure session token
+5. Automatically open your browser with authentication
+
+### Testing Local Server
+```bash
+# Start with your local FastMCP server
 npx @modelcontextprotocol/inspector python server.py
 ```
 
 This command will:
 1. Download and run MCP Inspector (if not cached)
-2. Start your RivalSearchMCP server with STDIO transport
+2. Start your local RivalSearchMCP server with STDIO transport
 3. Launch web UI at `http://localhost:6274`
 4. Generate a secure session token
 5. Automatically open your browser with authentication
