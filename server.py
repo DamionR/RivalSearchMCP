@@ -11,9 +11,8 @@ from src.tools.search_tools import register_search_tools
 from src.tools.traversal_tools import register_traversal_tools
 from src.tools.analysis_tools import register_analysis_tools
 
-# Import prompts and resources
+# Import prompts
 from src.prompts import register_prompts
-from src.resources import register_resources
 
 # Import logger
 from src.logger import logger
@@ -27,9 +26,8 @@ register_search_tools(app)
 register_traversal_tools(app)
 register_analysis_tools(app)
 
-# Register prompts and resources
+# Register prompts
 register_prompts(app)
-register_resources(app)
 
 if __name__ == "__main__":
     # For CLI compatibility, run directly with STDIO transport
