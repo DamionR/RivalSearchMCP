@@ -4,13 +4,13 @@ Advanced MCP server for web retrieval, search, and content discovery.
 
 ## What it does
 
-RivalSearchMCP provides tools for accessing web content, performing Google searches, analyzing websites, and managing research data. It includes 8 tools for comprehensive web research capabilities.
+RivalSearchMCP provides tools for accessing web content, performing Google searches, analyzing websites, and conducting research workflows. It includes 6 tools for comprehensive web research capabilities.
 
 ## Why it's useful
 
 - Access web content and perform searches
 - Analyze website content and structure  
-- Manage research data and findings
+- Conduct end-to-end research workflows
 - Integrate with AI assistants for enhanced web research
 
 ## How to get started
@@ -51,21 +51,12 @@ python server.py
 
 ## Available Tools
 
-- **retrieve_content** - Get content from URLs or search queries
-- **stream_content** - Real-time streaming from WebSocket URLs
-- **google_search** - Advanced Google Search with metadata
-- **traverse_website** - Intelligent website exploration
-- **analyze_content** - Extract insights and key points from content
-- **research_topic** - End-to-end research workflow
-- **store_data** - Save research data for later use
-- **retrieve_data** - Access stored research data
-
-## Where to get help
-
-- [Setup Guide](docs/setup_guide.md) - Detailed installation and configuration
-- [API Reference](docs/api.md) - Complete tool documentation
-- [Usage Examples](docs/usage.md) - Real-world usage scenarios
-- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+- **retrieve_content** - Enhanced content retrieval with support for single/multiple resources and image extraction
+- **stream_content** - Retrieve streaming content from WebSocket URLs
+- **google_search** - Comprehensive Google Search with multi-engine fallback and advanced features
+- **traverse_website** - Comprehensive website traversal with different modes (research, docs, map)
+- **analyze_content** - Analyze content and extract insights
+- **research_topic** - End-to-end research workflow for a topic
 
 ## Who maintains this project
 
