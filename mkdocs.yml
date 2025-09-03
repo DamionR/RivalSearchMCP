@@ -1,7 +1,7 @@
 site_name: RivalSearchMCP
 site_description: Advanced Multi-Engine Search and Content Analysis MCP Server
 site_author: RivalSearchMCP Team
-site_url: https://rivalsearchmcp.github.io
+site_url: https://damionrashford.github.io/RivalSearchMCP
 
 # Repository
 repo_name: damionrashford/RivalSearchMCP
@@ -98,8 +98,36 @@ nav:
 plugins:
   - search
 
+
+
 # Markdown Extensions
 markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - codehilite
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: "Permalink"
+  - pymdownx.arithmatex
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - pymdownx.tilde
   - abbr
   - admonition
   - attr_list

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://damionrashford.github.io/RivalSearchMCP/sitemap.xml
+
+# Allow all content to be indexed
+Disallow:
+
+# Crawl delay (optional)
+Crawl-delay: 1

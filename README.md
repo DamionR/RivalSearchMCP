@@ -89,7 +89,7 @@ Add this configuration to your MCP client:
 
 ## Documentation
 
-📖 **[Documentation](https://rivalsearchmcp.github.io)** - Full documentation
+📖 **[Documentation](https://damionrashford.github.io/RivalSearchMCP)** - Full documentation
 
 **Local Documentation:**
 - [User Guide](docs/user-guide/overview.md) - Complete guide to using all tools
