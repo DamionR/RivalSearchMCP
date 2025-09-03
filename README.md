@@ -6,7 +6,7 @@ Advanced MCP server for web research, content discovery, and trends analysis.
 
 ## What it does
 
-RivalSearchMCP provides comprehensive tools for accessing web content, performing Google searches, analyzing websites, conducting research workflows, and analyzing Google Trends data. It includes 6 core tool categories for comprehensive web research capabilities.
+RivalSearchMCP provides comprehensive tools for accessing web content, performing multi-engine searches, analyzing websites, conducting research workflows, and analyzing trends data. It includes 6 core tool categories for comprehensive web research capabilities.
 
 ## Why it's useful
 
