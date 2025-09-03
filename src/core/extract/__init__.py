@@ -1,15 +1,12 @@
 """
-Content extraction utilities for RivalSearchMCP.
-Componentized extraction functionality for triples and search results.
+Extract module for RivalSearchMCP.
+Handles content extraction and triple extraction.
 """
 
-from .triple_extraction import extract_triples
-from .search_extraction import extract_search_results
+from .extract import extract_search_results
+from .triple import extract_triples
 
 __all__ = [
-    # Triple Extraction
-    'extract_triples',
-    
-    # Search Result Extraction
-    'extract_search_results'
+    "extract_search_results",
+    "extract_triples",
 ]

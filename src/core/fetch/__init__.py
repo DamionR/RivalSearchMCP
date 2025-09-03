@@ -1,25 +1,29 @@
 """
-Core fetching and retrieval functionality for RivalSearchMCP.
-Componentized fetch functionality with base fetching, batch retrieval, and enhanced retrieval.
+Fetch module for RivalSearchMCP.
+Handles URL fetching and batch retrieval.
 """
 
-from .base_fetch import base_fetch_url, stream_fetch
-from .batch_retrieval import batch_rival_retrieve
-from .enhanced_retrieval import rival_retrieve, google_search_fetch
-from .resource_management import cleanup_resources
+from .base import (
+    base_fetch_url, 
+    stream_fetch,
+    BaseFetcher,
+    URLFetcher,
+    BatchFetcher,
+    EnhancedFetcher,
+    UnifiedFetcher
+)
+from .batch import batch_rival_retrieve
+from .enhanced import rival_retrieve, google_search_fetch
 
 __all__ = [
-    # Base Fetching
-    'base_fetch_url',
-    'stream_fetch',
-    
-    # Batch Retrieval
-    'batch_rival_retrieve',
-    
-    # Enhanced Retrieval
-    'rival_retrieve',
-    'google_search_fetch',
-    
-    # Resource Management
-    'cleanup_resources'
+    "base_fetch_url",
+    "stream_fetch",
+    "batch_rival_retrieve", 
+    "rival_retrieve",
+    "google_search_fetch",
+    "BaseFetcher",
+    "URLFetcher",
+    "BatchFetcher",
+    "EnhancedFetcher",
+    "UnifiedFetcher"
 ]

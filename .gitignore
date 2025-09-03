@@ -11,6 +11,24 @@ build/
 dist/
 .Python
 
+# MkDocs build output
+site/
+
+# Docs folder exclusions
+docs/.DS_Store
+docs/Thumbs.db
+docs/*.log
+docs/temp/
+docs/drafts/
+docs/_*
+docs/.env*
+docs/secrets/
+docs/private/
+docs/internal/
+docs/admin/
+docs/backup/
+docs/archive/
+
 # Virtual environments
 .venv/
 venv/
@@ -120,3 +138,17 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# GitHub Pages deployment
+.github/actions/
+.github/workflows/*.log
+
+# Additional docs exclusions
+docs/**/.*
+docs/**/*.tmp
+docs/**/*.temp
+docs/**/*.bak
+docs/**/*.backup
+docs/**/node_modules/
+docs/**/package-lock.json
+docs/**/yarn.lock

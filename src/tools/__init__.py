@@ -1,14 +1,11 @@
 """
-Tools package for RivalSearchMCP.
-Componentized tool modules for different functionality areas.
+Tools module for RivalSearchMCP.
+Provides various tools for search, analysis, and content processing.
 """
 
-from .retrieval_tools import register_retrieval_tools
-from .search_tools import register_search_tools
-from .traversal_tools import register_traversal_tools
+from .multi_search import multi_search, search_with_google_fallback
 
 __all__ = [
-    'register_retrieval_tools',
-    'register_search_tools', 
-    'register_traversal_tools'
+    "multi_search",
+    "search_with_google_fallback"
 ]

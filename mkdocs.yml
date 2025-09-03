@@ -1,0 +1,146 @@
+site_name: RivalSearchMCP
+site_description: Advanced Multi-Engine Search and Content Analysis MCP Server
+site_author: RivalSearchMCP Team
+site_url: https://damionrashford.github.io/RivalSearchMCP
+
+# Repository
+repo_name: damionrashford/RivalSearchMCP
+repo_url: https://github.com/damionrashford/RivalSearchMCP
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2025 RivalSearchMCP Team
+
+# Theme Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - scheme: default
+      primary: black
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: black
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - header.autohide
+    - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.delay
+    - navigation.instant.loading
+    - navigation.prune
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+  # logo: assets/logo.png
+  # favicon: assets/favicon.ico
+
+# Navigation Structure
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+    - Troubleshooting: getting-started/troubleshooting.md
+    - Deployment: getting-started/deployment.md
+  - User Guide:
+    - Overview: user-guide/overview.md
+    - Web Search: user-guide/web-search.md
+    - Content Extraction: user-guide/content-extraction.md
+    - Trends Analysis: user-guide/trends-analysis.md
+    - Website Analysis: user-guide/website-analysis.md
+    - Content Analysis: user-guide/content-analysis.md
+    - Research Workflows: user-guide/research-workflows.md
+    - Multi-Source Research: user-guide/multi-source-research.md
+
+  - Examples:
+    - Basic Usage: examples/basic-usage.md
+    - Search Examples: examples/search-examples.md
+    - Trends Analysis: examples/trends-examples.md
+    - Website Analysis: examples/website-examples.md
+    - Content Analysis: examples/content-analysis.md
+    - Research Workflows: examples/research-workflows.md
+    - Business Use Cases: examples/business-cases.md
+  - Developers:
+    - Overview: developers/overview.md
+    - Installation: developers/installation.md
+    - API Reference: developers/api-reference.md
+    - Contributing: developers/contributing.md
+
+# Plugins
+plugins:
+  - search
+  - awesome-pages
+
+# Markdown Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - codehilite:
+      guess_lang: false
+      use_pygments: true
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences
+
+# Extra CSS and JavaScript
+# extra_css:
+#   - stylesheets/rival-theme.css
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/rivalsearchmcp/rivalsearchmcp
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/rivalsearchmcp
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/rivalsearchmcp
+
+# Validation
+validation:
+  nav:
+    omitted_files: ignore
+    not_found: warn

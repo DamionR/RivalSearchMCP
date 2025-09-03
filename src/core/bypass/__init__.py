@@ -1,19 +1,16 @@
 """
-Web bypass functionality for RivalSearchMCP.
-Componentized bypass functionality for proxy management and paywall bypassing.
+Bypass module for RivalSearchMCP.
+Handles paywall detection and proxy management.
 """
 
-from .proxy_management import get_proxies, test_proxy, refresh_proxies, select_proxy
-from .paywall_bypass import detect_paywall, get_archive_url
+from .bypass import detect_paywall, get_archive_url
+from .proxy import get_proxies, refresh_proxies, select_proxy, test_proxy
 
 __all__ = [
-    # Proxy Management
-    'get_proxies',
-    'test_proxy',
-    'refresh_proxies',
-    'select_proxy',
-    
-    # Paywall Bypass
-    'detect_paywall',
-    'get_archive_url'
+    "detect_paywall",
+    "get_archive_url", 
+    "get_proxies",
+    "refresh_proxies",
+    "select_proxy",
+    "test_proxy",
 ]
