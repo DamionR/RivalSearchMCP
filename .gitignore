@@ -31,6 +31,7 @@ docs/archive/
 
 # Virtual environments
 .venv/
+.venv-py313/
 venv/
 env/
 ENV/
