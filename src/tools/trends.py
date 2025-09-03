@@ -283,19 +283,19 @@ def register_trends_tools(mcp: FastMCP):
         filename: Optional[str] = None,
     ) -> dict:
         """
-        Export Google Trends data to CSV file.
+        Export Google Trends data to CSV format (returns data instead of writing to file).
 
         Args:
             keywords: List of search terms
             timeframe: Time range for data
             geo: Geographic location
-            filename: Optional custom filename
+            filename: Optional custom filename (for reference only)
 
         Returns:
-            Export result with file details
+            Export result with data content
         """
         try:
-            logger.info(f"📊 Exporting trends data for: {keywords}")
+            logger.info(f"📊 Exporting trends data to CSV for: {keywords}")
 
             # Use the GoogleTrendsAPI class
             trends_api = GoogleTrendsAPI()
@@ -312,36 +312,44 @@ def register_trends_tools(mcp: FastMCP):
                     "geo": geo,
                 }
 
-            # Export to CSV
-            export_result = trends_api.export_data(data, "csv")
-
-            if export_result.get("success"):
-                logger.info(
-                    f"✅ Exported trends data to CSV: {export_result['filename']}"
-                )
+            # Convert data to CSV format instead of writing to file
+            try:
+                # Convert DataFrame to CSV string
+                csv_data = data.to_csv(index=True)
+                
+                # Also provide as Python dict for easier processing
+                data_dict = data.to_dict(orient="records")
+                
                 return {
                     "success": True,
-                    "message": "Trends data exported to CSV successfully",
-                    "filename": export_result["filename"],
+                    "format": "csv",
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
-                    "file_path": export_result["path"],
+                    "data": data_dict,
+                    "csv_string": csv_data,
+                    "total_records": len(data),
+                    "columns": list(data.columns),
+                    "timestamp": datetime.now().isoformat(),
+                    "note": "Data returned directly instead of written to file due to environment restrictions"
                 }
-            else:
+                
+            except Exception as export_error:
+                logger.error(f"❌ Error converting data to CSV: {export_error}")
                 return {
                     "success": False,
-                    "error": export_result.get("error", "Export failed"),
+                    "error": f"Failed to convert data to CSV: {str(export_error)}",
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
                 }
 
         except Exception as e:
-            logger.error(f"❌ Error exporting to CSV: {str(e)}")
+            error_msg = f"Failed to export trends data: {str(e)}"
+            logger.error(f"❌ {error_msg}")
             return {
                 "success": False,
-                "error": str(e),
+                "error": error_msg,
                 "keywords": keywords,
                 "timeframe": timeframe,
                 "geo": geo,
@@ -355,16 +363,16 @@ def register_trends_tools(mcp: FastMCP):
         filename: Optional[str] = None,
     ) -> dict:
         """
-        Export Google Trends data to JSON file.
+        Export Google Trends data to JSON format (returns data instead of writing to file).
 
         Args:
             keywords: List of search terms
             timeframe: Time range for data
             geo: Geographic location
-            filename: Optional custom filename
+            filename: Optional custom filename (for reference only)
 
         Returns:
-            Export result with file details
+            Export result with data content
         """
         try:
             logger.info(f"📊 Exporting trends data to JSON for: {keywords}")
@@ -384,36 +392,44 @@ def register_trends_tools(mcp: FastMCP):
                     "geo": geo,
                 }
 
-            # Export to JSON
-            export_result = trends_api.export_data(data, "json")
-
-            if export_result.get("success"):
-                logger.info(
-                    f"✅ Exported trends data to JSON: {export_result['filename']}"
-                )
+            # Convert data to JSON-serializable format instead of writing to file
+            try:
+                # Convert DataFrame to JSON string
+                json_data = data.to_json(orient="records", indent=2)
+                
+                # Also provide as Python dict for easier processing
+                data_dict = data.to_dict(orient="records")
+                
                 return {
                     "success": True,
-                    "message": "Trends data exported to JSON successfully",
-                    "filename": export_result["filename"],
+                    "format": "json",
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
-                    "file_path": export_result["path"],
+                    "data": data_dict,
+                    "json_string": json_data,
+                    "total_records": len(data),
+                    "columns": list(data.columns),
+                    "timestamp": datetime.now().isoformat(),
+                    "note": "Data returned directly instead of written to file due to environment restrictions"
                 }
-            else:
+                
+            except Exception as export_error:
+                logger.error(f"❌ Error converting data to JSON: {export_error}")
                 return {
                     "success": False,
-                    "error": export_result.get("error", "Export failed"),
+                    "error": f"Failed to convert data to JSON: {str(export_error)}",
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
                 }
 
         except Exception as e:
-            logger.error(f"❌ Error exporting to JSON: {str(e)}")
+            error_msg = f"Failed to export trends data: {str(e)}"
+            logger.error(f"❌ {error_msg}")
             return {
                 "success": False,
-                "error": str(e),
+                "error": error_msg,
                 "keywords": keywords,
                 "timeframe": timeframe,
                 "geo": geo,
@@ -427,7 +443,7 @@ def register_trends_tools(mcp: FastMCP):
         table_name: Optional[str] = None,
     ) -> dict:
         """
-        Create SQLite table with Google Trends data.
+        Create SQLite table structure with Google Trends data (returns schema instead of creating files).
 
         Args:
             keywords: List of search terms
@@ -436,10 +452,10 @@ def register_trends_tools(mcp: FastMCP):
             table_name: Optional custom table name
 
         Returns:
-            SQL table creation result
+            SQL table creation result with schema and sample data
         """
         try:
-            logger.info(f"🗄️ Creating SQL table for: {keywords}")
+            logger.info(f"🗄️ Creating SQL table structure for: {keywords}")
 
             # Use the GoogleTrendsAPI class
             trends_api = GoogleTrendsAPI()
@@ -456,53 +472,86 @@ def register_trends_tools(mcp: FastMCP):
                     "geo": geo,
                 }
 
-            # Generate table name
+            # Generate table name if not provided
             if not table_name:
-                keyword_str = "_".join(
-                    k[:3] for k in keywords[:3] for key in [k.replace(" ", "_")]
-                )
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                table_name = f"trends_{keyword_str}_{timestamp}"
+                keyword_str = "_".join(k[:3] for k in keywords[:3])
+                table_name = f"trends_{keyword_str}_{geo.lower()}"
 
-            # Sanitize table name
-            table_name = "".join(c for c in table_name if c.isalnum() or c == "_")
-
-            # Create database directory
-            db_dir = Path("google_trends_db")
-            db_dir.mkdir(exist_ok=True)
-            db_path = db_dir / f"{table_name}.db"
-
-            # Create SQLite table using the API
-            table_result = trends_api.create_sql_table(data, table_name, str(db_path))
-
-            if table_result.get("success"):
-                logger.info(
-                    f"✅ Created SQL table '{table_name}' with {table_result['rows_inserted']} rows"
-                )
+            # Create SQL schema instead of actual database file
+            try:
+                # Generate CREATE TABLE statement
+                create_table_sql = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    keyword TEXT NOT NULL,
+                    date TEXT NOT NULL,
+                    interest_value INTEGER NOT NULL,
+                    timeframe TEXT NOT NULL,
+                    geo TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+                """
+                
+                # Create indexes
+                create_indexes_sql = f"""
+                CREATE INDEX IF NOT EXISTS idx_{table_name}_keyword ON {table_name}(keyword);
+                CREATE INDEX IF NOT EXISTS idx_{table_name}_date ON {table_name}(date);
+                CREATE INDEX IF NOT EXISTS idx_{table_name}_geo ON {table_name}(geo);
+                """
+                
+                # Sample INSERT statements
+                sample_data = data.head(5).to_dict(orient="records")
+                insert_statements = []
+                for row in sample_data:
+                    insert_sql = f"""
+                    INSERT INTO {table_name} (keyword, date, interest_value, timeframe, geo, created_at)
+                    VALUES ('{row.get('keyword', '')}', '{row.get('date', '')}', {row.get('interest_value', 0)}, 
+                            '{timeframe}', '{geo}', CURRENT_TIMESTAMP);
+                    """
+                    insert_statements.append(insert_sql)
+                
                 return {
                     "success": True,
                     "table_name": table_name,
-                    "rows_inserted": table_result["rows_inserted"],
-                    "columns": table_result["columns"],
-                    "database_path": str(db_path),
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
+                    "schema": {
+                        "create_table": create_table_sql,
+                        "create_indexes": create_indexes_sql,
+                        "columns": [
+                            "id (INTEGER PRIMARY KEY)",
+                            "keyword (TEXT)",
+                            "date (TEXT)",
+                            "interest_value (INTEGER)",
+                            "timeframe (TEXT)",
+                            "geo (TEXT)",
+                            "created_at (TIMESTAMP)"
+                        ]
+                    },
+                    "sample_data": sample_data,
+                    "insert_statements": insert_statements,
+                    "total_records": len(data),
+                    "timestamp": datetime.now().isoformat(),
+                    "note": "SQL schema and sample data returned instead of creating database file due to environment restrictions"
                 }
-            else:
+                
+            except Exception as schema_error:
+                logger.error(f"❌ Error creating SQL schema: {schema_error}")
                 return {
                     "success": False,
-                    "error": table_result.get("error", "Failed to create table"),
+                    "error": f"Failed to create SQL schema: {str(schema_error)}",
                     "keywords": keywords,
                     "timeframe": timeframe,
                     "geo": geo,
                 }
 
         except Exception as e:
-            logger.error(f"❌ Error creating SQL table: {str(e)}")
+            error_msg = f"Failed to create SQL table for {keywords}: {str(e)}"
+            logger.error(f"❌ {error_msg}")
             return {
                 "success": False,
-                "error": str(e),
+                "error": error_msg,
                 "keywords": keywords,
                 "timeframe": timeframe,
                 "geo": geo,

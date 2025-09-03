@@ -8,6 +8,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, Optional
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 from fastmcp import FastMCP
@@ -27,7 +28,7 @@ def register_llms_tools(mcp: FastMCP):
             url: Website URL to generate LLMs.txt for (supports various formats: https://example.com, example.com, @https://example.com, local file paths)
 
         Returns:
-            Generation result with file details and content
+            Generation result with file content and details
         """
         try:
             logger.info(f"📝 Generating LLMs.txt for: {url}")
@@ -75,29 +76,28 @@ def register_llms_tools(mcp: FastMCP):
                     except Exception as e:
                         logger.warning(f"Could not read {file.name}: {e}")
 
-                # Copy files to current directory for user access
-                for file in all_files:
-                    shutil.copy2(file, ".")
-
+                # Return the content instead of trying to write to read-only file system
                 logger.info(f"✅ Successfully generated {len(all_files)} files")
-
+                
                 return {
                     "success": True,
-                    "pages_processed": len(generator.pages_data),
-                    "files_generated": [f.name for f in all_files],
-                    "output_directory": os.getcwd(),
+                    "url": url,
+                    "files_generated": len(all_files),
+                    "txt_files": [f.name for f in txt_files],
+                    "json_files": [f.name for f in json_files],
                     "files_content": files_data,
+                    "timestamp": datetime.now().isoformat(),
+                    "note": "Files generated in temporary directory and content returned directly due to environment restrictions"
                 }
 
         except Exception as e:
-            logger.error(f"❌ Error generating LLMs.txt: {e}")
+            error_msg = f"Failed to generate LLMs.txt for {url}: {str(e)}"
+            logger.error(f"❌ {error_msg}")
             return {
                 "success": False,
-                "error": str(e),
-                "pages_processed": 0,
-                "files_generated": [],
-                "output_directory": "",
-                "files_content": {},
+                "error": error_msg,
+                "url": url,
+                "timestamp": datetime.now().isoformat(),
             }
 
 

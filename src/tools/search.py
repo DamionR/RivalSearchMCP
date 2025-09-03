@@ -152,29 +152,53 @@ def register_search_tools(mcp: FastMCP):
                             if isinstance(result, dict):
                                 result_dicts.append(result)
                             else:
-                                # Handle MultiSearchResult objects
-                                result_dicts.append({
-                                    "title": getattr(result, 'title', ''),
-                                    "url": getattr(result, 'url', ''),
-                                    "description": getattr(result, 'description', ''),
-                                    "position": getattr(result, 'position', 0),
-                                    "engine": getattr(result, 'engine', 'multi_engine'),
-                                    "timestamp": getattr(result, 'timestamp', ''),
-                                })
+                                # Handle MultiSearchResult objects - ensure all values are serializable
+                                try:
+                                    result_dicts.append({
+                                        "title": str(getattr(result, 'title', '')),
+                                        "url": str(getattr(result, 'url', '')),
+                                        "description": str(getattr(result, 'description', '')),
+                                        "position": int(getattr(result, 'position', 0)),
+                                        "engine": str(getattr(result, 'engine', 'multi_engine')),
+                                        "timestamp": str(getattr(result, 'timestamp', '')),
+                                    })
+                                except Exception as attr_error:
+                                    # Fallback to basic string representation
+                                    logger.warning(f"Error extracting attributes from result: {attr_error}")
+                                    result_dicts.append({
+                                        "title": str(result) if hasattr(result, '__str__') else 'Unknown',
+                                        "url": "",
+                                        "description": "",
+                                        "position": 0,
+                                        "engine": "multi_engine",
+                                        "timestamp": datetime.now().isoformat(),
+                                    })
                     else:
                         # Handle direct results list
                         for result in results:
                             if isinstance(result, dict):
                                 result_dicts.append(result)
                             else:
-                                result_dicts.append({
-                                    "title": getattr(result, 'title', ''),
-                                    "url": getattr(result, 'url', ''),
-                                    "description": getattr(result, 'description', ''),
-                                    "position": getattr(result, 'position', 0),
-                                    "engine": getattr(result, 'engine', 'multi_engine'),
-                                    "timestamp": getattr(result, 'timestamp', ''),
-                                })
+                                try:
+                                    result_dicts.append({
+                                        "title": str(getattr(result, 'title', '')),
+                                        "url": str(getattr(result, 'url', '')),
+                                        "description": str(getattr(result, 'description', '')),
+                                        "position": int(getattr(result, 'position', 0)),
+                                        "engine": str(getattr(result, 'engine', 'multi_engine')),
+                                        "timestamp": str(getattr(result, 'timestamp', '')),
+                                    })
+                                except Exception as attr_error:
+                                    # Fallback to basic string representation
+                                    logger.warning(f"Error extracting attributes from result: {attr_error}")
+                                    result_dicts.append({
+                                        "title": str(result) if hasattr(result, '__str__') else 'Unknown',
+                                        "url": "",
+                                        "description": "",
+                                        "position": 0,
+                                        "engine": "multi_engine",
+                                        "timestamp": datetime.now().isoformat(),
+                                    })
                     
                     # Extract metadata
                     search_metadata = {
