@@ -1,5 +1,4 @@
-[![Verified on MSeeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/5fefd41f-2c41-48d8-8b80-e69255aa6331)
-[![MCP Badge](https://lobehub.com/badge/mcp/damionr-rivalsearchmcp)](https://lobehub.com/mcp/damionr-rivalsearchmcp)
+
 # RivalSearchMCP
 
 Advanced MCP server for web research, content discovery, and trends analysis.
