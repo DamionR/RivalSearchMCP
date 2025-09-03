@@ -29,6 +29,9 @@ docs/admin/
 docs/backup/
 docs/archive/
 
+# Hidden docs directory
+.docs/
+
 # Virtual environments
 .venv/
 .venv-py313/
