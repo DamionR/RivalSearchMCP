@@ -31,11 +31,11 @@ jobs:
         with:
           python-version: '3.11'
           
-      - name: Install dependencies
+      - name: Install MkDocs Material
         run: |
           python -m pip install --upgrade pip
           pip install mkdocs-material
-          pip install -r requirements.txt
+          pip install mkdocs-git-revision-date-localized
           
       - name: Build with MkDocs
         run: mkdocs build
@@ -52,6 +52,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4

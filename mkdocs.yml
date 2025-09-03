@@ -97,7 +97,7 @@ nav:
 # Plugins
 plugins:
   - search
-  - awesome-pages
+  - git-revision-date-localized
 
 # Markdown Extensions
 markdown_extensions:
