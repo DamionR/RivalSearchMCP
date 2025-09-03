@@ -35,7 +35,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install mkdocs-material
-          pip install mkdocs-git-revision-date-localized
           
       - name: Build with MkDocs
         run: mkdocs build

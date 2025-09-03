@@ -97,7 +97,6 @@ nav:
 # Plugins
 plugins:
   - search
-  - git-revision-date-localized
 
 # Markdown Extensions
 markdown_extensions:
